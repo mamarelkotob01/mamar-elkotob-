@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- ============================================================ -->
+  <!-- STATIC PAGES                                                  -->
+  <!-- ============================================================ -->
+
+  <url>
+    <loc>https://zahmetkotab.com/</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://zahmetkotab.com/store</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://zahmetkotab.com/worlds</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://zahmetkotab.com/authors</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://zahmetkotab.com/blog</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://zahmetkotab.com/offers</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://zahmetkotab.com/media</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- ============================================================ -->
+  <!-- DYNAMIC BOOK PAGES                                            -->
+  <!-- NOTE: For a production sitemap with real book IDs, generate  -->
+  <!-- this file automatically using a build script that queries    -->
+  <!-- Supabase and outputs XML. The structure below is the template.-->
+  <!--                                                               -->
+  <!-- Build script: node scripts/generate-sitemap.mjs              -->
+  <!-- ============================================================ -->
+
+  <!--
+  <url>
+    <loc>https://zahmetkotab.com/book/BOOK-UUID-HERE</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  -->
+
+</urlset>

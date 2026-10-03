@@ -1,0 +1,54 @@
+# =====================================================
+# PERFORMANCE: Enable GZIP Compression
+# Reduces JS/CSS/HTML transfer size by 60-80%
+# =====================================================
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml font/woff font/woff2
+</IfModule>
+
+# =====================================================
+# PERFORMANCE: Aggressive Browser Caching Headers
+# Cloudflare + browsers cache assets for 1 year
+# JS/CSS files have content-hash in filename (safe to cache forever)
+# =====================================================
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # HTML: never cache (always fetch fresh — React entry point)
+  ExpiresByType text/html "access plus 0 seconds"
+  # Hashed JS/CSS chunks: cache forever (filename changes on update)
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  # Fonts & Images: cache for 6 months
+  ExpiresByType font/woff2 "access plus 6 months"
+  ExpiresByType image/webp "access plus 6 months"
+  ExpiresByType image/png "access plus 6 months"
+  ExpiresByType image/jpeg "access plus 6 months"
+  ExpiresByType image/svg+xml "access plus 6 months"
+</IfModule>
+
+# =====================================================
+# SECURITY: Block common attack patterns
+# =====================================================
+<IfModule mod_rewrite.c>
+  # Block SQL injection attempts in query string
+  RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+  RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+  RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+  RewriteRule .* index.html [F]
+</IfModule>
+
+# =====================================================
+# SPA ROUTING: All paths resolve to React index.html
+# Required for React Router to work on Hostinger Apache
+# =====================================================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-l
+  RewriteRule . /index.html [L]
+</IfModule>

@@ -1,0 +1,332 @@
+
+# 🔥 CLICKERS — PREMIUM FRONTEND GENERATION PROMPT (FINAL VERSION)
+
+Create a *production-ready frontend system* for a premium digital publishing platform developed by a creative tech brand called *Clickers*.
+
+The platform is NOT a normal website.
+
+It must feel like entering a *cinematic storytelling universe* where books become immersive experiences.
+
+The frontend must be modular, scalable, cleanly structured, and prepared for seamless backend integration later.
+
+---
+
+# 🌍 PLATFORM IDENTITY
+
+Brand: *Clickers*
+Type: Premium Digital Publishing & Storytelling Platform
+Primary Market: Arabic audience with global expansion
+Languages:
+
+* Arabic (RTL) — primary language
+* English (LTR) — secondary language
+
+The system MUST support full bilingual switching with automatic RTL/LTR layout adaptation.
+
+---
+
+# 🎯 EXPERIENCE GOAL
+
+The interface should feel inspired by cinematic platforms such as Netflix-style discovery combined with luxury storytelling environments.
+
+Users should feel:
+
+* immersion
+* curiosity
+* exploration
+* emotional connection to stories
+
+Every interaction must feel premium and intentional.
+
+---
+
+# 🎨 DESIGN SYSTEM
+
+## Visual Style
+
+* Cinematic
+* Luxurious
+* Dark storytelling atmosphere
+* Magical glowing accents
+* Elegant minimalism
+
+## Color Palette
+
+* Black (Primary Background)
+* Deep Purple (Atmosphere)
+* Gold (Highlights & Interaction)
+* Soft Neutral Text Colors
+
+## Typography
+
+* Premium readable Arabic font + modern English font
+* Large cinematic headings
+* Generous spacing
+
+---
+
+# 🧩 FRONTEND ARCHITECTURE REQUIREMENTS
+
+Use a *component-driven architecture*.
+
+The project must be structured for scalability and future backend integration.
+
+Recommended stack:
+
+* Next.js (App Router)
+* React
+* Tailwind CSS
+* TypeScript
+* Framer Motion for animations
+
+NO monolithic page design.
+
+---
+
+## Folder Structure
+
+/src
+/components
+/layouts
+/sections
+/features
+/hooks
+/services
+/i18n
+/styles
+/pages or app routes
+
+---
+
+# 🌐 GLOBAL SYSTEM COMPONENTS
+
+Create reusable components:
+
+* Navbar (RTL/LTR aware)
+* Language Switcher
+* Theme Controller
+* Cinematic Hero Section
+* Book Card
+* World Card
+* Author Card
+* Media Player
+* Carousel System
+* Animated CTA Button
+* Modal System
+* Notification / Toast System
+* Skeleton Loaders
+* Empty States
+* Error States
+* Footer
+
+All components must be reusable and isolated.
+
+---
+
+# 🌐 CORE PAGES
+
+## 1. Homepage
+
+Include:
+
+* Cinematic hero animation (book opening into worlds)
+* Featured Books carousel
+* Latest Releases
+* Categories exploration
+* Featured Worlds section (priority)
+* Trailer preview section
+* Offers & Promotions banners
+* Authors spotlight
+* Cinematic call-to-action blocks
+
+---
+
+## 2. Book Experience Page
+
+Each book page must contain:
+
+* Cover
+* Title
+* Author
+* Rich description
+* Embedded cinematic trailer
+* Optional ambient music player
+* Ratings & reviews UI
+* Buy Now button
+* Read Sample button
+* Recommendation section
+* Tags & categories
+
+---
+
+## 3. Store / Shop
+
+* Grid system
+* Smart filtering UI
+* Digital & physical product layouts
+* Bundle presentation cards
+* Discount badges
+* Smooth filtering transitions
+
+---
+
+## 4. Worlds Section (IMMERSIVE CORE)
+
+Each world represents a storytelling universe.
+
+World page includes:
+
+* Cinematic banner
+* World lore description
+* Connected books
+* Reading order timeline
+* Characters section
+* Combined trailer
+* Deep immersive layout
+
+---
+
+## 5. Offers & Campaigns Page
+
+* Active promotions
+* Limited deals
+* Visual campaign banners
+* Highlighted events
+
+---
+
+## 6. Authors Page
+
+* Author profile cards
+* Biography section
+* Author statistics UI
+* Linked books display
+
+---
+
+## 7. Reader Interface (Frontend Only)
+
+Design reading experience UI:
+
+* Dark / Light / Golden themes
+* Font size control
+* Bookmark UI
+* Resume reading interface
+* Smooth page transitions
+
+(No backend logic required yet.)
+
+---
+
+## 8. Media Section
+
+* Trailers gallery
+* Music tracks
+* Promotional videos
+
+---
+
+# 🎬 ANIMATION SYSTEM
+
+Animations must be cinematic but performant:
+
+* Smooth fade transitions
+* Parallax scrolling
+* Glow hover effects
+* Section reveal on scroll
+* Page transition animations
+* Motion must feel elegant, never distracting
+
+Use Framer Motion only.
+
+---
+
+# 📱 RESPONSIVE STRATEGY
+
+Mobile-first design.
+
+Support:
+
+* Desktop
+* Tablet
+* Mobile
+
+Include:
+
+* Swipe gestures
+* Touch-friendly controls
+* Sticky mobile CTAs
+* Adaptive layouts for RTL/LTR
+
+---
+
+# 🌍 INTERNATIONALIZATION (CRITICAL)
+
+Implement full bilingual system:
+
+* Dynamic language switch
+* RTL layout flipping
+* Direction-aware animations
+* Direction-aware icons and spacing
+
+---
+
+# ⚡ PERFORMANCE RULES
+
+* Lazy load media
+* Optimize images
+* Code splitting
+* Prevent heavy animation rendering
+* Use skeleton loaders
+* Fast initial load
+
+---
+
+# ♿ ACCESSIBILITY
+
+Include:
+
+* Keyboard navigation
+* Proper semantic HTML
+* High contrast readability
+* Reduced motion preference support
+
+---
+
+# 🔌 BACKEND-READY DESIGN
+
+The frontend must be API-ready.
+
+Use mock data services with clear separation:
+
+/services/api/
+/services/mock/
+
+NO hardcoded logic inside components.
+
+Prepare structure for:
+
+* Supabase
+* REST APIs
+* Node.js backend
+
+---
+
+# 🧼 CODE QUALITY REQUIREMENTS
+
+* Clean readable code
+* TypeScript types everywhere
+* Reusable hooks
+* Separation of concerns
+* Scalable architecture
+* Easy future backend integration
+
+---
+
+# 💡 FINAL EXPERIENCE GOAL
+
+The platform must feel like:
+
+"A cinematic storytelling universe where every book is an experience — not just a product."
+
+Focus on elegance, performance, immersion, and scalability.

@@ -1,0 +1,26 @@
+User-agent: *
+
+# Allow all public content
+Allow: /
+Allow: /store
+Allow: /worlds
+Allow: /authors
+Allow: /blog
+Allow: /offers
+Allow: /media
+Allow: /book/
+
+# Block private and admin routes
+Disallow: /admin
+Disallow: /admin/
+Disallow: /checkout
+Disallow: /my-orders
+Disallow: /reader/
+Disallow: /auth
+
+# Block API and assets that don't need indexing
+Disallow: /api/
+Disallow: /assets/*.map
+
+# Sitemap location
+Sitemap: https://zahmetkotab.com/sitemap.xml

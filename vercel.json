@@ -1,9 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "pnpm build",
-  "installCommand": "pnpm install",
-  "framework": "vite",
-  "outputDirectory": "dist",
+  "buildCommand": "cd artifacts/clickers && npm run build",
+  "outputDirectory": "artifacts/clickers/dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]

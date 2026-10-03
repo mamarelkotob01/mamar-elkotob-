@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, BookOpen, Users, Globe, PenTool,
   ShoppingBag, BarChart3, Download, LogOut, ChevronRight,
-  Play, Bell, Menu, X,
+  Play, Bell, Menu, X, ExternalLink,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/useAuth';
 import { useAdminOrderNotifications, type NewOrderPayload } from '@/hooks/useAdminOrderNotifications';
@@ -164,7 +164,7 @@ function AdminSidebar({
 }
 
 export function AdminLayout({ children }: { children: ReactNode }) {
-  const { isAdmin, isLoading } = useAuth();
+  const { isAdmin, isLoading, profile } = useAuth();
   const [, navigate] = useLocation();
   const [toasts, setToasts] = useState<OrderToast[]>([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -206,7 +206,62 @@ export function AdminLayout({ children }: { children: ReactNode }) {
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed((v) => !v)}
       />
-      <main className="flex-1 overflow-auto min-w-0">
+      <main className="flex-1 overflow-auto min-w-0 flex flex-col">
+        {/* Top Navbar */}
+        <header className="px-6 py-4 border-b border-white/10 bg-slate-900/80 backdrop-blur-xl flex items-center justify-between gap-4 sticky top-0 z-30 shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-base">
+              🚪
+            </div>
+            <div>
+              <h2 className="text-white font-bold text-sm font-arabic leading-tight">لوحة إدارة ممر الكتب</h2>
+              <p className="text-slate-400 text-[10px] uppercase tracking-wider">Control Center</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link href="/">
+              <motion.span
+                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all text-xs font-bold cursor-pointer font-arabic"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <ExternalLink size={14} className="text-amber-400" />
+                <span>زيارة الموقع</span>
+              </motion.span>
+            </Link>
+
+            <button
+              onClick={() => navigate('/admin/orders')}
+              className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all"
+              title="Orders Alerts"
+            >
+              <Bell size={16} />
+              {toasts.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[9px] font-black text-white flex items-center justify-center">
+                  {toasts.length}
+                </span>
+              )}
+            </button>
+
+            <div className="h-5 w-px bg-white/10 mx-1" />
+
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-violet-600/30 border border-violet-500/40 text-violet-300 font-bold flex items-center justify-center text-xs shadow-inner">
+                {(profile?.full_name || profile?.email || 'A')[0].toUpperCase()}
+              </div>
+              <div className="hidden sm:flex flex-col text-left">
+                <span className="text-white text-xs font-semibold truncate max-w-[130px]">
+                  {profile?.full_name || profile?.email}
+                </span>
+                <span className="text-slate-500 text-[9px] uppercase tracking-widest font-mono">
+                  {profile?.role || 'Admin'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </header>
+
         {/* Permission banner */}
         {typeof Notification !== 'undefined' && Notification.permission === 'default' && (
           <div className="admin-banner border-b px-6 py-3 flex items-center justify-between gap-4">
@@ -224,7 +279,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             </button>
           </div>
         )}
-        <div className="p-6 lg:p-8">{children}</div>
+        <div className="p-6 lg:p-8 flex-1">{children}</div>
       </main>
 
       <OrderNotificationToasts orders={toasts} onDismiss={dismissToast} />

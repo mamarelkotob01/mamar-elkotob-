@@ -89,9 +89,9 @@ export function AdminWorlds() {
     try {
       const url = await upload(file);
       setFormData({ ...formData, banner_url: url });
-      toast({ title: 'Image uploaded successfully' });
+      toast({ title: 'تم رفع الصورة بنجاح' });
     } catch (err) {
-      toast({ title: 'Upload failed', variant: 'destructive' });
+      toast({ title: 'فشل رفع الصورة', variant: 'destructive' });
     }
   };
 
@@ -118,20 +118,20 @@ export function AdminWorlds() {
         });
       }
 
-      toast({ title: editingWorld ? 'World updated' : 'World created' });
+      toast({ title: editingWorld ? 'تم تحديث بيانات العالم بنجاح' : 'تمت إضافة العالم بنجاح' });
       setIsModalOpen(false);
     } catch (err) {
-      toast({ title: 'Error saving world', variant: 'destructive' });
+      toast({ title: 'حدث خطأ أثناء حفظ العالم', variant: 'destructive' });
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this world?')) {
+    if (window.confirm('هل أنت متأكد من رغبتك في حذف هذا العالم الروائي؟')) {
       try {
         await deleteWorld.mutateAsync(id);
-        toast({ title: 'World deleted' });
+        toast({ title: 'تم حذف العالم بنجاح' });
       } catch (err) {
-        toast({ title: 'Error deleting world', variant: 'destructive' });
+        toast({ title: 'حدث خطأ أثناء حذف العالم', variant: 'destructive' });
       }
     }
   };
@@ -143,12 +143,12 @@ export function AdminWorlds() {
   return (
     <AdminLayout>
       <AdminPageHeader 
-        title={isRTL ? 'إدارة العوالم' : 'Manage Worlds'}
-        subtitle={isRTL ? 'تحرير وإنشاء عوالم للكتب والمؤلفين' : 'Create and edit reading worlds'}
+        title="إدارة العوالم الروائية"
+        subtitle="تحرير وإنشاء العوالم الأدبية وربط الكتب والمؤلفين بها"
         action={
-          <Button onClick={() => handleOpenModal()} className="rounded-2xl gap-2 font-bold px-6 py-6 h-auto">
+          <Button onClick={() => handleOpenModal()} className="rounded-2xl gap-2 font-bold px-6 py-6 h-auto font-arabic shadow-xl shadow-primary/20">
             <Plus size={18} />
-            <span>{isRTL ? 'إضافة عالم جديد' : 'Add New World'}</span>
+            <span>إضافة عالم جديد</span>
           </Button>
         }
       />
@@ -156,33 +156,33 @@ export function AdminWorlds() {
       {/* Search and Filters */}
       <div className="mb-8 flex items-center gap-4">
         <div className="relative flex-1 max-w-md gap-0">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/30" size={18} />
+          <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-primary/30" size={18} />
           <input 
             type="text"
-            placeholder={isRTL ? 'ابحث عن عالم...' : 'Search worlds...'}
+            placeholder="ابحث عن عالم روائي..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl border border-border rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-primary"
+            className="w-full pr-12 pl-4 py-4 bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl border border-border rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all font-bold text-primary font-arabic text-right"
           />
         </div>
       </div>
 
       {/* Worlds Grid/List */}
       <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-[2.5rem] border border-border overflow-hidden shadow-sm">
-        <table className="w-full text-left">
+        <table className="w-full text-right" dir="rtl">
           <thead>
             <tr className="border-b border-border bg-primary/5">
-              <th className="px-8 py-5 text-xs font-black uppercase tracking-wider text-primary/40 truncate">Visual</th>
-              <th className="px-8 py-5 text-xs font-black uppercase tracking-wider text-primary/40">Name</th>
-              <th className="px-8 py-5 text-xs font-black uppercase tracking-wider text-primary/40">Featured</th>
-              <th className="px-8 py-5 text-xs font-black uppercase tracking-wider text-primary/40 text-right">Actions</th>
+              <th className="px-8 py-5 text-xs font-black uppercase tracking-wider text-primary/40 truncate font-arabic">الغلاف / اللون</th>
+              <th className="px-8 py-5 text-xs font-black uppercase tracking-wider text-primary/40 font-arabic">اسم العالم</th>
+              <th className="px-8 py-5 text-xs font-black uppercase tracking-wider text-primary/40 font-arabic">الحالة</th>
+              <th className="px-8 py-5 text-xs font-black uppercase tracking-wider text-primary/40 text-left font-arabic">الإجراءات</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {isLoading ? (
-              <tr><td colSpan={4} className="p-20 text-center text-primary/40 font-bold">Loading worlds...</td></tr>
+              <tr><td colSpan={4} className="p-20 text-center text-primary/40 font-bold font-arabic">جاري تحميل العوالم الروائية...</td></tr>
             ) : filteredWorlds.length === 0 ? (
-              <tr><td colSpan={4} className="p-20 text-center text-primary/40 font-bold">No worlds found.</td></tr>
+              <tr><td colSpan={4} className="p-20 text-center text-primary/40 font-bold font-arabic">لم يتم العثور على أي عوالم.</td></tr>
             ) : filteredWorlds.map((world: any) => (
               <motion.tr key={world.id} layout className="group hover:bg-primary/5 transition-colors">
                 <td className="px-8 py-6">
@@ -197,26 +197,27 @@ export function AdminWorlds() {
                   </div>
                 </td>
                 <td className="px-8 py-6">
-                  <p className="font-bold text-primary">{world.name_en}</p>
-                  <p className="text-primary/40 font-arabic text-sm">{world.name_ar}</p>
+                  <p className="font-bold text-primary font-arabic text-base">{world.name_ar}</p>
+                  <p className="text-primary/40 text-xs font-medium">{world.name_en}</p>
                 </td>
                 <td className="px-8 py-6">
                   {world.is_featured ? (
-                    <span className="flex items-center gap-1.5 text-accent font-black text-xs uppercase tracking-wider">
+                    <span className="inline-flex items-center gap-1.5 text-accent font-black text-xs font-arabic">
                       <Star size={12} fill="currentColor" />
-                      Featured
+                      عالم مميز
                     </span>
                   ) : (
-                    <span className="text-primary/20 font-black text-xs uppercase tracking-wider">Standard</span>
+                    <span className="text-primary/30 font-black text-xs font-arabic">عادي</span>
                   )}
                 </td>
-                <td className="px-8 py-6 text-right">
-                  <div className="flex items-center justify-end gap-2">
+                <td className="px-8 py-6 text-left">
+                  <div className="flex items-center justify-start gap-2">
                     <Button 
                       variant="outline" 
                       size="icon" 
                       onClick={() => handleOpenModal(world)}
                       className="w-10 h-10 rounded-xl border-primary/10 hover:bg-primary hover:text-white transition-all"
+                      title="تعديل"
                     >
                       <Edit2 size={16} />
                     </Button>
@@ -225,6 +226,7 @@ export function AdminWorlds() {
                       size="icon" 
                       onClick={() => handleDelete(world.id)}
                       className="w-10 h-10 rounded-xl border-red-100 text-red-400 hover:bg-red-400 hover:text-white transition-all"
+                      title="حذف"
                     >
                       <Trash2 size={16} />
                     </Button>
@@ -250,42 +252,33 @@ export function AdminWorlds() {
             <motion.div
               layoutId="modal"
               className="relative w-full max-w-3xl bg-slate-900 border border-slate-700/60 shadow-2xl rounded-2xl overflow-hidden text-slate-100"
+              dir="rtl"
             >
               <div className="p-6 border-b border-slate-800 flex items-center justify-between sticky top-0 bg-slate-900/95 backdrop-blur-md z-10">
-                <div>
-                  <h3 className="text-xl font-black text-slate-100 tracking-tight">
-                    {editingWorld ? 'Edit World' : 'Add New World'}
+                <div className="text-right">
+                  <h3 className="text-xl font-black text-slate-100 tracking-tight font-arabic">
+                    {editingWorld ? 'تعديل بيانات العالم الروائي' : 'إضافة عالم روائي جديد'}
                   </h3>
-                  <p className="text-slate-400 font-medium text-xs">Universe Definition & Book Binding</p>
+                  <p className="text-slate-400 font-medium text-xs font-arabic">تعريف العالم الأدبي وربط الكتب به</p>
                 </div>
                 <button onClick={() => setIsModalOpen(false)} className="w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors flex items-center justify-center font-bold text-lg">
                   ✕
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6 max-h-[75vh] overflow-y-auto custom-scrollbar">
+              <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6 max-h-[75vh] overflow-y-auto custom-scrollbar text-right">
                 {formData.banner_url && (
                   <div className="w-full h-40 rounded-xl overflow-hidden relative group border border-slate-800">
-                    <img src={formData.banner_url} className="w-full h-full object-cover" alt="Preview" />
+                    <img src={formData.banner_url} className="w-full h-full object-cover" alt="معاينة" />
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <p className="text-white font-bold text-xs uppercase tracking-wider">Banner Preview</p>
+                      <p className="text-white font-bold text-xs uppercase tracking-wider font-arabic">معاينة الغلاف</p>
                     </div>
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block">World Name (EN)</label>
-                    <input 
-                      required
-                      value={formData.name_en}
-                      onChange={(e) => setFormData({...formData, name_en: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl font-medium text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-sm"
-                      placeholder="e.g. Chronicles of Al-Andalus"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block text-right">عنوان العالم (AR)</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block font-arabic">اسم العالم (بالعربية) *</label>
                     <input 
                       required
                       value={formData.name_ar}
@@ -294,18 +287,30 @@ export function AdminWorlds() {
                       placeholder="مثال: وقائع الأندلس"
                     />
                   </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block font-arabic text-left" dir="ltr">اسم العالم (بالإنجليزية)</label>
+                    <input 
+                      required
+                      value={formData.name_en}
+                      onChange={(e) => setFormData({...formData, name_en: e.target.value})}
+                      dir="ltr"
+                      className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl font-medium text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-sm"
+                      placeholder="مثال: Chronicles of Al-Andalus"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2 col-span-2 md:col-span-1">
-                    <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block flex items-center justify-between">
-                       <span className="flex items-center gap-2"><ImageIcon size={12} /> Narrative Banner</span>
+                    <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block flex items-center justify-between font-arabic">
+                       <span className="flex items-center gap-2"><ImageIcon size={12} /> بانر / صورة العالم</span>
                        {isUploading && <Loader2 size={12} className="animate-spin text-indigo-400" />}
                     </label>
                     <div className="flex gap-2">
                       <input 
                         value={formData.banner_url}
                         onChange={(e) => setFormData({...formData, banner_url: e.target.value})}
+                        dir="ltr"
                         className="flex-1 px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-xs"
                         placeholder="https://..."
                       />
@@ -327,8 +332,8 @@ export function AdminWorlds() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block flex items-center gap-2">
-                      <Palette size={12} /> Theme Color
+                    <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block flex items-center gap-2 font-arabic">
+                      <Palette size={12} /> لون السمة المميز
                     </label>
                     <div className="flex gap-3 items-center">
                       <input 
@@ -340,6 +345,7 @@ export function AdminWorlds() {
                       <input 
                         value={formData.color_primary}
                         onChange={(e) => setFormData({...formData, color_primary: e.target.value})}
+                        dir="ltr"
                         className="flex-1 px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl font-mono text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                       />
                     </div>
@@ -347,22 +353,24 @@ export function AdminWorlds() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block">Description (EN)</label>
-                  <textarea 
-                    rows={3}
-                    value={formData.description_en}
-                    onChange={(e) => setFormData({...formData, description_en: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all resize-none text-sm"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block text-right">الوصف (AR)</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block font-arabic">نبذة عن العالم (بالعربية)</label>
                   <textarea 
                     rows={3}
                     value={formData.description_ar}
                     onChange={(e) => setFormData({...formData, description_ar: e.target.value})}
                     className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl font-medium text-white font-arabic text-right focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all resize-none text-sm"
+                    placeholder="نبذة تشويقية عن هذا العالم الروائي..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-indigo-400 block font-arabic text-left" dir="ltr">نبذة عن العالم (بالإنجليزية)</label>
+                  <textarea 
+                    rows={3}
+                    value={formData.description_en}
+                    onChange={(e) => setFormData({...formData, description_en: e.target.value})}
+                    dir="ltr"
+                    className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all resize-none text-sm"
                   />
                 </div>
 
@@ -377,10 +385,10 @@ export function AdminWorlds() {
                       <div className="w-9 h-9 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
                         <Library size={18} />
                       </div>
-                      <div className="text-left">
-                        <p className="font-bold text-slate-200 text-xs uppercase tracking-wider">Bind Books</p>
-                        <p className="text-slate-400 text-xs">
-                          {selectedBookIds.length} titles connected
+                      <div className="text-right">
+                        <p className="font-bold text-slate-200 text-xs uppercase tracking-wider font-arabic">ربط الكتب بهذا العالم</p>
+                        <p className="text-slate-400 text-xs font-arabic">
+                          {selectedBookIds.length} كتب مرتبطة
                         </p>
                       </div>
                     </div>
@@ -414,12 +422,12 @@ export function AdminWorlds() {
                                 <div className="w-8 h-11 bg-slate-950 rounded border border-slate-800 overflow-hidden flex-shrink-0">
                                   {book.cover_url && <img src={book.cover_url} className="w-full h-full object-cover" alt="" />}
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                  <p className="font-bold text-xs truncate text-white">
-                                    {language === 'ar' ? book.title_ar : book.title_en}
+                                <div className="flex-1 min-w-0 text-right">
+                                  <p className="font-bold text-xs truncate text-white font-arabic">
+                                    {book.title_ar || book.title_en}
                                   </p>
-                                  <p className="text-[11px] truncate text-slate-400">
-                                    {language === 'ar' ? book.authors?.name_ar : book.authors?.name_en}
+                                  <p className="text-[11px] truncate text-slate-400 font-arabic">
+                                    {book.authors?.name_ar || book.authors?.name_en}
                                   </p>
                                 </div>
                                 {selectedBookIds.includes(book.id) && <Check size={16} className="text-indigo-400" />}
@@ -446,9 +454,9 @@ export function AdminWorlds() {
                     }`}>
                       <Star size={18} fill={formData.is_featured ? 'currentColor' : 'none'} />
                     </div>
-                    <div className="text-left">
-                      <p className="font-bold text-slate-200 text-xs uppercase tracking-wider">Featured World</p>
-                      <p className="text-slate-400 text-xs">Display on home page hero carousel</p>
+                    <div className="text-right">
+                      <p className="font-bold text-slate-200 text-xs uppercase tracking-wider font-arabic">عالم روائي مميز</p>
+                      <p className="text-slate-400 text-xs font-arabic">عرض هذا العالم في الواجهة وشريط الصفحة الرئيسية</p>
                     </div>
                   </div>
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
@@ -459,15 +467,15 @@ export function AdminWorlds() {
                 </button>
 
                 <div className="flex gap-4 pt-6 border-t border-slate-800">
-                  <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-all text-sm">
-                    Cancel
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-all text-sm font-arabic">
+                    إلغاء
                   </button>
                   <button 
                     type="submit" 
                     disabled={upsertWorld.isPending || assignBooks.isPending}
-                    className="flex-[2] py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all text-sm shadow-lg shadow-indigo-600/30 disabled:opacity-50"
+                    className="flex-[2] py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all text-sm shadow-lg shadow-indigo-600/30 disabled:opacity-50 font-arabic"
                   >
-                    {upsertWorld.isPending || assignBooks.isPending ? 'Saving...' : editingWorld ? 'Save Changes' : 'Add World'}
+                    {upsertWorld.isPending || assignBooks.isPending ? 'جاري الحفظ...' : editingWorld ? 'حفظ التعديلات' : 'إضافة العالم'}
                   </button>
                 </div>
               </form>

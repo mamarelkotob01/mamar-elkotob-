@@ -36,21 +36,21 @@ export function AdminAnalytics() {
 
   return (
     <AdminLayout>
-      <AdminPageHeader title="Analytics" subtitle="Business insights and performance metrics" />
+      <AdminPageHeader title="التحليلات والإحصائيات" subtitle="رؤى المبيعات ومؤشرات نمو المنصة والكتب الأكثر طلباً" />
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <StatCard label="Total Revenue" value={`${(analytics?.totalRevenue ?? 0).toLocaleString()} EGP`} icon={TrendingUp} />
-        <StatCard label="Total Orders" value={analytics?.totalOrders ?? 0} icon={ShoppingBag} />
-        <StatCard label="Total Users" value={analytics?.totalUsers ?? 0} icon={Users} />
-        <StatCard label="Total Books" value={books?.length ?? 0} icon={BookOpen} />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10" dir="rtl">
+        <StatCard label="إجمالي الإيرادات" value={`${(analytics?.totalRevenue ?? 0).toLocaleString()} ج.م`} icon={TrendingUp} />
+        <StatCard label="إجمالي الطلبات" value={analytics?.totalOrders ?? 0} icon={ShoppingBag} />
+        <StatCard label="إجمالي المستخدمين" value={analytics?.totalUsers ?? 0} icon={Users} />
+        <StatCard label="إجمالي الكتب" value={books?.length ?? 0} icon={BookOpen} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6" dir="rtl">
         {/* Revenue Over Time */}
-        <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl p-8 border border-border shadow-sm lg:col-span-2">
-          <h2 className="text-xl font-black text-primary font-cinematic mb-2">Revenue & Orders — Last 30 Days</h2>
-          <p className="text-primary/40 text-sm font-bold mb-8">Daily sales performance</p>
+        <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl p-8 border border-border shadow-sm lg:col-span-2 text-right">
+          <h2 className="text-xl font-black text-primary font-arabic mb-2">الإيرادات والطلبات — آخر 30 يوماً</h2>
+          <p className="text-primary/40 text-sm font-bold mb-8 font-arabic">مؤشر أداء المبيعات والطلبات اليومية</p>
           {revenueData.length > 0 ? (
             <ResponsiveContainer width="100%" height={260}>
               <AreaChart data={revenueData}>
@@ -66,39 +66,39 @@ export function AdminAnalytics() {
                 </defs>
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'hsl(345 65% 33% / 0.4)', fontWeight: 700 }} axisLine={false} tickLine={false} />
                 <YAxis hide />
-                <Tooltip contentStyle={{ background: 'white', border: '1px solid #E8E0DC', borderRadius: '16px', boxShadow: '0 8px 32px rgba(139,29,61,0.1)' }} />
-                <Area type="monotone" dataKey="revenue" name="Revenue (EGP)" stroke="hsl(345 65% 33%)" strokeWidth={2.5} fill="url(#revGrad)" />
-                <Area type="monotone" dataKey="orders" name="Orders" stroke="#C9A84C" strokeWidth={2.5} fill="url(#ordGrad)" />
-                <Legend wrapperStyle={{ fontSize: '12px', fontWeight: 700 }} />
+                <Tooltip contentStyle={{ background: 'white', border: '1px solid #E8E0DC', borderRadius: '16px', boxShadow: '0 8px 32px rgba(139,29,61,0.1)', fontFamily: 'Cairo, sans-serif' }} />
+                <Area type="monotone" dataKey="revenue" name="الإيرادات (ج.م)" stroke="hsl(345 65% 33%)" strokeWidth={2.5} fill="url(#revGrad)" />
+                <Area type="monotone" dataKey="orders" name="الطلبات" stroke="#C9A84C" strokeWidth={2.5} fill="url(#ordGrad)" />
+                <Legend wrapperStyle={{ fontSize: '12px', fontWeight: 700, fontFamily: 'Cairo, sans-serif' }} />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-[260px] flex items-center justify-center text-primary/20 font-bold">No sales data yet</div>
+            <div className="h-[260px] flex items-center justify-center text-primary/20 font-bold font-arabic">لا تتوفر بيانات مبيعات بعد</div>
           )}
         </div>
 
         {/* Top Books Bar Chart */}
-        <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl p-8 border border-border shadow-sm">
-          <h2 className="text-xl font-black text-primary font-cinematic mb-2">Top Selling Books</h2>
-          <p className="text-primary/40 text-sm font-bold mb-8">By units sold</p>
+        <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl p-8 border border-border shadow-sm text-right">
+          <h2 className="text-xl font-black text-primary font-arabic mb-2">الكتب الأكثر مبيعاً</h2>
+          <p className="text-primary/40 text-sm font-bold mb-8 font-arabic">مرتبة حسب عدد النسخ المباعة</p>
           {(analytics?.topBooks ?? []).length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={(analytics?.topBooks ?? []).slice(0, 6).map((b) => ({ name: (b as { title_en: string }).title_en?.slice(0, 15) + '…', sold: Number((b as { total_sold: number }).total_sold) }))}>
-                <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'hsl(345 65% 33% / 0.5)', fontWeight: 700 }} axisLine={false} tickLine={false} />
+              <BarChart data={(analytics?.topBooks ?? []).slice(0, 6).map((b) => ({ name: ((b as any).title_ar || (b as any).title_en)?.slice(0, 15) + '…', sold: Number((b as { total_sold: number }).total_sold) }))}>
+                <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'hsl(345 65% 33% / 0.5)', fontWeight: 700, fontFamily: 'Cairo, sans-serif' }} axisLine={false} tickLine={false} />
                 <YAxis hide />
-                <Tooltip contentStyle={{ background: 'white', border: '1px solid #E8E0DC', borderRadius: '16px', boxShadow: '0 8px 32px rgba(139,29,61,0.1)' }} />
-                <Bar dataKey="sold" name="Units Sold" fill="hsl(345 65% 33%)" radius={[8, 8, 0, 0]} />
+                <Tooltip contentStyle={{ background: 'white', border: '1px solid #E8E0DC', borderRadius: '16px', boxShadow: '0 8px 32px rgba(139,29,61,0.1)', fontFamily: 'Cairo, sans-serif' }} />
+                <Bar dataKey="sold" name="النسخ المباعة" fill="hsl(345 65% 33%)" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-[280px] flex items-center justify-center text-primary/20 font-bold">No sales yet</div>
+            <div className="h-[280px] flex items-center justify-center text-primary/20 font-bold font-arabic">لا توجد مبيعات مسجلة بعد</div>
           )}
         </div>
 
         {/* Genre Pie Chart */}
-        <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl p-8 border border-border shadow-sm">
-          <h2 className="text-xl font-black text-primary font-cinematic mb-2">Catalog by Genre</h2>
-          <p className="text-primary/40 text-sm font-bold mb-8">Book distribution across genres</p>
+        <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl p-8 border border-border shadow-sm text-right">
+          <h2 className="text-xl font-black text-primary font-arabic mb-2">توزيع الكتالوج حسب التصنيف</h2>
+          <p className="text-primary/40 text-sm font-bold mb-8 font-arabic">توزيع الكتب بين الأقسام الأدبية</p>
           {genreData.length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
@@ -107,26 +107,26 @@ export function AdminAnalytics() {
                     <Cell key={index} fill={GENRE_COLORS[index % GENRE_COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: 'white', border: '1px solid #E8E0DC', borderRadius: '16px' }} />
-                <Legend wrapperStyle={{ fontSize: '11px', fontWeight: 700 }} />
+                <Tooltip contentStyle={{ background: 'white', border: '1px solid #E8E0DC', borderRadius: '16px', fontFamily: 'Cairo, sans-serif' }} />
+                <Legend wrapperStyle={{ fontSize: '11px', fontWeight: 700, fontFamily: 'Cairo, sans-serif' }} />
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-[280px] flex items-center justify-center text-primary/20 font-bold">No books yet</div>
+            <div className="h-[280px] flex items-center justify-center text-primary/20 font-bold font-arabic">لا توجد كتب مسجلة بعد</div>
           )}
         </div>
       </div>
 
       {/* Top Books Table */}
-      <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl border border-border shadow-sm overflow-hidden">
-        <div className="px-8 py-6 border-b border-border">
-          <h2 className="text-xl font-black text-primary font-cinematic">Top Books — Revenue Breakdown</h2>
+      <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl border border-border shadow-sm overflow-hidden" dir="rtl">
+        <div className="px-8 py-6 border-b border-border text-right">
+          <h2 className="text-xl font-black text-primary font-arabic">الكتب الأعلى تحقيقاً للإيرادات</h2>
         </div>
-        <table className="w-full">
+        <table className="w-full text-right">
           <thead>
-            <tr className="border-b border-border">
-              {['Rank', 'Book', 'Units Sold', 'Revenue (EGP)'].map((h) => (
-                <th key={h} className="px-6 py-4 text-left text-xs font-black uppercase tracking-wider text-primary/40">{h}</th>
+            <tr className="border-b border-border bg-primary/5">
+              {['الترتيب', 'الكتاب', 'النسخ المباعة', 'الإيرادات (ج.م)'].map((h, idx) => (
+                <th key={h} className={`px-6 py-4 text-xs font-black uppercase tracking-wider text-primary/40 font-arabic ${idx === 3 ? 'text-left' : 'text-right'}`}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -140,7 +140,7 @@ export function AdminAnalytics() {
                 transition={{ delay: i * 0.04 }}
               >
                 <td className="px-6 py-4">
-                  <span className="text-3xl font-black text-accent/20 font-cinematic">0{i + 1}</span>
+                  <span className="text-2xl font-black text-accent/30 font-mono">0{i + 1}</span>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
@@ -148,21 +148,22 @@ export function AdminAnalytics() {
                       <img src={(book as { cover_url: string }).cover_url} alt="" className="w-8 h-12 object-cover rounded-lg shadow-sm" />
                     )}
                     <div>
-                      <p className="font-bold text-primary text-sm" dir="rtl">{(book as { title_ar: string }).title_ar}</p>
-                      <p className="text-primary/40 text-xs">{(book as { title_en: string }).title_en}</p>
+                      <p className="font-bold text-primary text-sm font-arabic" dir="rtl">{(book as { title_ar: string }).title_ar || (book as { title_en: string }).title_en}</p>
+                      <p className="text-primary/40 text-xs font-medium">{(book as { title_en: string }).title_en}</p>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="font-black text-primary">{(book as { total_sold: number }).total_sold}</span>
+                  <span className="font-black text-primary font-mono">{(book as { total_sold: number }).total_sold}</span>
                 </td>
-                <td className="px-6 py-4">
-                  <span className="font-black text-accent">{Number((book as { total_revenue: number }).total_revenue).toFixed(2)}</span>
+                <td className="px-6 py-4 text-left">
+                  <span className="font-black text-accent font-mono">{Number((book as { total_revenue: number }).total_revenue).toFixed(2)}</span>
+                  <span className="text-accent/60 text-xs mr-1 font-arabic"> ج.م</span>
                 </td>
               </motion.tr>
             ))}
             {(analytics?.topBooks ?? []).length === 0 && (
-              <tr><td colSpan={4} className="text-center py-12 text-primary/30 font-bold">No sales data available</td></tr>
+              <tr><td colSpan={4} className="text-center py-12 text-primary/30 font-bold font-arabic">لا تتوفر بيانات مبيعات حالياً</td></tr>
             )}
           </tbody>
         </table>

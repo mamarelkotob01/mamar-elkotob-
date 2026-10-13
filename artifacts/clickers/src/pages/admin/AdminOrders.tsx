@@ -9,17 +9,17 @@ const STATUSES = ['pending', 'paid', 'delivered', 'cancelled'] as const;
 type OrderStatus = typeof STATUSES[number];
 
 const STATUS_CONFIG: Record<OrderStatus, { label: string; icon: typeof Clock; color: string; bg: string }> = {
-  pending:   { label: 'Pending',   icon: Clock,        color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' },
-  paid:      { label: 'Paid',      icon: CheckCircle,  color: 'text-green-600', bg: 'bg-green-50 border-green-200' },
-  delivered: { label: 'Delivered', icon: Package,      color: 'text-blue-600',  bg: 'bg-blue-50 border-blue-200' },
-  cancelled: { label: 'Cancelled', icon: XCircle,      color: 'text-red-500',   bg: 'bg-red-50 border-red-200' },
+  pending:   { label: 'قيد الانتظار',   icon: Clock,        color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' },
+  paid:      { label: 'تم الدفع',      icon: CheckCircle,  color: 'text-green-600', bg: 'bg-green-50 border-green-200' },
+  delivered: { label: 'تم التوصيل', icon: Package,      color: 'text-blue-600',  bg: 'bg-blue-50 border-blue-200' },
+  cancelled: { label: 'ملغي', icon: XCircle,      color: 'text-red-500',   bg: 'bg-red-50 border-red-200' },
 };
 
 const PM_LABEL: Record<string, string> = {
-  bank_transfer: 'Bank Transfer',
-  instapay: 'InstaPay',
-  vodafone_cash: 'Vodafone Cash',
-  stripe: 'Online (Stripe)',
+  bank_transfer: 'تحويل بنكي',
+  instapay: 'إنستاباي (InstaPay)',
+  vodafone_cash: 'فودافون كاش',
+  stripe: 'دفع إلكتروني (بطاقة)',
 };
 
 export function AdminOrders() {
@@ -39,17 +39,17 @@ export function AdminOrders() {
   return (
     <AdminLayout>
       <AdminPageHeader
-        title="Orders Management"
-        subtitle={`${orders?.length ?? 0} total orders · ${totalRevenue.toLocaleString()} EGP revenue`}
+        title="إدارة الطلبات والمبيعات"
+        subtitle={`${orders?.length ?? 0} إجمالي الطلبات · ${totalRevenue.toLocaleString()} ج.م الإيرادات الإجمالية`}
       />
 
       {/* Status Filter Tabs */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap gap-2 mb-8" dir="rtl">
         <button
           onClick={() => setFilterStatus('all')}
-          className={`px-5 py-2.5 rounded-xl font-black text-sm transition-all ${filterStatus === 'all' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl border border-border text-primary/50 hover:text-primary'}`}
+          className={`px-5 py-2.5 rounded-xl font-black text-sm font-arabic transition-all ${filterStatus === 'all' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl border border-border text-primary/50 hover:text-primary'}`}
         >
-          All ({orders?.length ?? 0})
+          الكل ({orders?.length ?? 0})
         </button>
         {STATUSES.map((s) => {
           const cfg = STATUS_CONFIG[s];
@@ -58,7 +58,7 @@ export function AdminOrders() {
             <button
               key={s}
               onClick={() => setFilterStatus(s)}
-              className={`px-5 py-2.5 rounded-xl font-black text-sm transition-all border ${filterStatus === s ? `${cfg.bg} ${cfg.color}` : 'bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl border-border text-primary/50 hover:text-primary'}`}
+              className={`px-5 py-2.5 rounded-xl font-black text-sm font-arabic transition-all border ${filterStatus === s ? `${cfg.bg} ${cfg.color}` : 'bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl border-border text-primary/50 hover:text-primary'}`}
             >
               {cfg.label} ({count})
             </button>
@@ -68,11 +68,11 @@ export function AdminOrders() {
 
       {/* Orders Table */}
       <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl border border-border shadow-sm overflow-hidden">
-        <table className="w-full">
+        <table className="w-full text-right" dir="rtl">
           <thead>
-            <tr className="border-b border-border">
-              {['Order ID', 'Customer', 'Items', 'Total', 'Status', 'Date', 'Actions'].map((h) => (
-                <th key={h} className="px-6 py-4 text-left text-xs font-black uppercase tracking-wider text-primary/40">{h}</th>
+            <tr className="border-b border-border bg-primary/5">
+              {['رقم الطلب', 'بيانات العميل', 'عدد العناصر', 'الإجمالي', 'الحالة', 'تاريخ الطلب', 'الإجراءات'].map((h, idx) => (
+                <th key={h} className={`px-6 py-4 text-xs font-black uppercase tracking-wider text-primary/40 font-arabic ${idx === 6 ? 'text-left' : 'text-right'}`}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -95,9 +95,8 @@ export function AdminOrders() {
                   const pm = (order as any).payment_method as string;
 
                   return (
-                    <>
+                    <tbody key={order.id}>
                       <motion.tr
-                        key={order.id}
                         className="border-b border-border hover:bg-primary/2 transition-colors cursor-pointer group"
                         onClick={() => setExpanded(isExpanded ? null : order.id as string)}
                         initial={{ opacity: 0 }}
@@ -109,32 +108,33 @@ export function AdminOrders() {
                           </span>
                         </td>
                         <td className="px-6 py-4">
-                          <p className="font-bold text-primary text-sm">{customer?.full_name || '—'}</p>
-                          <p className="text-primary/40 text-xs">{customer?.email}</p>
+                          <p className="font-bold text-primary text-sm font-arabic">{customer?.full_name || 'عميل غير مسجل'}</p>
+                          <p className="text-primary/40 text-xs font-mono" dir="ltr">{customer?.email}</p>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="text-primary font-bold">{(items as unknown[]).length}</span>
+                          <span className="text-primary font-bold">{(items as unknown[]).length} كتب</span>
                         </td>
                         <td className="px-6 py-4">
                           <span className="font-black text-primary">{Number(order.total_amount).toFixed(2)}</span>
-                          <span className="text-primary/30 text-xs ml-1">EGP</span>
+                          <span className="text-primary/40 text-xs mr-1 font-arabic">ج.م</span>
                         </td>
                         <td className="px-6 py-4">
-                          <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-black ${cfg.bg} ${cfg.color}`}>
+                          <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-black font-arabic ${cfg.bg} ${cfg.color}`}>
                             <StatusIcon size={12} />
                             {cfg.label}
                           </div>
                         </td>
                         <td className="px-6 py-4">
                           <span className="text-primary/60 font-bold text-xs">
-                            {format(new Date(order.created_at), 'dd/MM/yy HH:mm')}
+                            {format(new Date(order.created_at), 'dd/MM/yyyy HH:mm')}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <td className="px-6 py-4 text-left">
+                          <div className="flex items-center justify-start gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={(e) => { e.stopPropagation(); setExpanded(isExpanded ? null : order.id as string); }}
                               className="w-8 h-8 rounded-xl bg-primary/5 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all"
+                              title="عرض تفاصيل الطلب"
                             >
                               <Eye size={13} />
                             </button>
@@ -145,7 +145,7 @@ export function AdminOrders() {
                                 updateStatus.mutate({ id: order.id as string, status: e.target.value });
                               }}
                               onClick={(e) => e.stopPropagation()}
-                              className="text-xs font-bold text-primary border border-border rounded-xl px-2 py-1.5 bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer"
+                              className="text-xs font-bold text-primary border border-border rounded-xl px-2 py-1.5 bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer font-arabic"
                             >
                               {STATUSES.map((s) => <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>)}
                             </select>
@@ -166,13 +166,13 @@ export function AdminOrders() {
                                     <CreditCard size={16} />
                                   </div>
                                   <div>
-                                    <p className="text-xs font-black uppercase tracking-wider text-primary/40">Payment Method</p>
-                                    <p className="font-black text-primary text-base">{PM_LABEL[pm] ?? pm}</p>
+                                    <p className="text-xs font-black uppercase tracking-wider text-primary/40 font-arabic">طريقة الدفع</p>
+                                    <p className="font-black text-primary text-base font-arabic">{PM_LABEL[pm] ?? pm}</p>
                                   </div>
                                 </div>
-                                <div className="text-right">
-                                  <p className="text-xs font-black uppercase tracking-wider text-primary/40">Order Total</p>
-                                  <p className="font-black text-primary text-xl">{(order.total_amount as number).toFixed(2)} <span className="text-sm text-primary/30">EGP</span></p>
+                                <div className="text-left">
+                                  <p className="text-xs font-black uppercase tracking-wider text-primary/40 font-arabic">إجمالي الطلب</p>
+                                  <p className="font-black text-primary text-xl">{(order.total_amount as number).toFixed(2)} <span className="text-sm text-primary/40 font-arabic">ج.م</span></p>
                                 </div>
                               </div>
 
@@ -180,19 +180,19 @@ export function AdminOrders() {
                               {['bank_transfer', 'instapay', 'vodafone_cash'].includes(pm) && (
                                 <div className={`flex items-center justify-between px-6 py-4 border-t ${txId ? 'bg-green-50 border-green-100' : 'bg-amber-50 border-amber-100'}`}>
                                   <div>
-                                    <p className={`text-xs font-black uppercase tracking-wider mb-1 ${txId ? 'text-green-600' : 'text-amber-600'}`}>
-                                      {txId ? '✓ Transaction ID — Submitted' : '⚠ No Transaction ID Submitted Yet'}
+                                    <p className={`text-xs font-black uppercase tracking-wider mb-1 font-arabic ${txId ? 'text-green-600' : 'text-amber-600'}`}>
+                                      {txId ? '✓ تم إرفاق رقم العملية / مرجع التحويل' : '⚠ لم يقم العميل بتقديم رقم العملية بعد'}
                                     </p>
-                                    <p className={`font-mono font-bold text-sm ${txId ? 'text-primary' : 'text-amber-500'}`}>
-                                      {txId || 'Customer has not provided a payment reference'}
+                                    <p className={`font-mono font-bold text-sm ${txId ? 'text-primary' : 'text-amber-600'}`} dir="ltr">
+                                      {txId || 'في انتظار تأكيد التحويل'}
                                     </p>
                                   </div>
                                   {txId && (
                                     <button
                                       onClick={() => { navigator.clipboard.writeText(txId); }}
-                                      className="flex items-center gap-1.5 px-4 py-2 bg-green-100 text-green-700 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-green-200 transition-colors"
+                                      className="flex items-center gap-1.5 px-4 py-2 bg-green-100 text-green-700 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-green-200 transition-colors font-arabic"
                                     >
-                                      <Copy size={11} /> Copy ID
+                                      <Copy size={11} /> نسخ الرقم
                                     </button>
                                   )}
                                 </div>
@@ -205,27 +205,27 @@ export function AdminOrders() {
                               {/* Left: Customer & Shipping */}
                               <div className="lg:w-2/5 space-y-8">
                                 <div>
-                                  <h4 className="text-xs font-black uppercase tracking-wider text-primary/30 mb-4 flex items-center gap-2">
-                                    <Users size={12} /> Recipient Information
+                                  <h4 className="text-xs font-black uppercase tracking-wider text-primary/30 mb-4 flex items-center gap-2 font-arabic">
+                                    <Users size={12} /> بيانات المستلم والعميل
                                   </h4>
                                   <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl border border-border rounded-3xl p-6 shadow-sm relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-125 duration-500" />
+                                    <div className="absolute top-0 left-0 w-24 h-24 bg-primary/5 rounded-full -ml-10 -mt-10 transition-transform group-hover:scale-125 duration-500" />
                                     <div className="relative z-10">
-                                      <p className="text-primary font-black text-xl mb-1">{customer?.full_name || 'N/A'}</p>
-                                      <p className="text-primary/40 text-sm font-bold mb-4">{customer?.email}</p>
+                                      <p className="text-primary font-black text-xl mb-1 font-arabic">{customer?.full_name || 'غير محدد'}</p>
+                                      <p className="text-primary/40 text-sm font-bold mb-4 font-mono" dir="ltr">{customer?.email}</p>
                                       <div className="flex items-center justify-between p-3 bg-primary/5 rounded-xl border border-primary/10">
                                         <div className="flex items-center gap-2">
                                           <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center">
                                             <Users size={14} />
                                           </div>
-                                          <p className="text-primary font-black text-sm">{customer?.phone || 'No Phone Number'}</p>
+                                          <p className="text-primary font-black text-sm font-mono" dir="ltr">{customer?.phone || 'لا يوجد رقم هاتف'}</p>
                                         </div>
                                         {customer?.phone && (
                                           <button
                                             onClick={() => { navigator.clipboard.writeText(customer.phone as string); }}
-                                            className="text-xs font-black uppercase text-accent hover:text-primary transition-colors"
+                                            className="text-xs font-black uppercase text-accent hover:text-primary transition-colors font-arabic"
                                           >
-                                            Copy
+                                            نسخ
                                           </button>
                                         )}
                                       </div>
@@ -234,20 +234,20 @@ export function AdminOrders() {
                                 </div>
 
                                 <div>
-                                  <h4 className="text-xs font-black uppercase tracking-wider text-primary/30 mb-4 flex items-center gap-2">
-                                    <Package size={12} /> Shipping Destination
+                                  <h4 className="text-xs font-black uppercase tracking-wider text-primary/30 mb-4 flex items-center gap-2 font-arabic">
+                                    <Package size={12} /> عنوان الشحن والتوصيل
                                   </h4>
                                   <div className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl border border-border rounded-3xl p-6 shadow-sm">
-                                    <p className="text-primary font-bold text-base whitespace-pre-wrap leading-relaxed mb-4">
-                                      {(order as any).shipping_address || 'No address provided'}
+                                    <p className="text-primary font-bold text-base whitespace-pre-wrap leading-relaxed mb-4 font-arabic">
+                                      {(order as any).shipping_address || 'لم يتم تقديم عنوان شحن'}
                                     </p>
                                     <div className="flex items-center justify-between pt-4 border-t border-border">
-                                      <span className="text-xs font-black uppercase text-primary/30 tracking-wider">Address Details</span>
+                                      <span className="text-xs font-black uppercase text-primary/30 tracking-wider font-arabic">العنوان التفصيلي</span>
                                       <button
                                         onClick={() => { navigator.clipboard.writeText((order as any).shipping_address || ''); }}
-                                        className="text-xs font-black uppercase text-accent hover:text-primary transition-colors"
+                                        className="text-xs font-black uppercase text-accent hover:text-primary transition-colors font-arabic"
                                       >
-                                        Copy Full Address
+                                        نسخ العنوان
                                       </button>
                                     </div>
                                   </div>
@@ -256,8 +256,8 @@ export function AdminOrders() {
 
                               {/* Right: Order Manifest */}
                               <div className="flex-1">
-                                <h4 className="text-xs font-black uppercase tracking-wider text-primary/30 mb-4 flex items-center gap-2">
-                                  <ShoppingBag size={12} /> Order Manifest
+                                <h4 className="text-xs font-black uppercase tracking-wider text-primary/30 mb-4 flex items-center gap-2 font-arabic">
+                                  <ShoppingBag size={12} /> قائمة الكتب المطلوبة
                                 </h4>
                                 <div className="space-y-4">
                                   {(items as any[]).map((item, i) => (
@@ -272,12 +272,12 @@ export function AdminOrders() {
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-start justify-between">
                                           <div>
-                                            <p className="text-primary font-black text-sm mb-1" dir="rtl">{item.books?.title_ar}</p>
+                                            <p className="text-primary font-black text-sm mb-1 font-arabic">{item.books?.title_ar || item.books?.title_en}</p>
                                             <p className="text-primary/40 text-xs font-bold uppercase tracking-wider">{item.books?.title_en}</p>
                                           </div>
-                                          <div className="text-right">
-                                            <p className="text-primary font-black text-sm">{(item.quantity * item.unit_price).toFixed(2)} <span className="text-xs opacity-30">EGP</span></p>
-                                            <p className="text-primary/40 text-xs font-bold uppercase tracking-wider">Qty: {item.quantity}</p>
+                                          <div className="text-left">
+                                            <p className="text-primary font-black text-sm">{(item.quantity * item.unit_price).toFixed(2)} <span className="text-xs opacity-40 font-arabic">ج.م</span></p>
+                                            <p className="text-primary/40 text-xs font-bold font-arabic">الكمية: {item.quantity}</p>
                                           </div>
                                         </div>
                                       </div>
@@ -288,9 +288,9 @@ export function AdminOrders() {
                                     <div className="mt-4 p-6 bg-accent/5 rounded-[1.5rem] border border-accent/10">
                                       <div className="flex items-center gap-2 mb-2">
                                         <PenTool size={12} className="text-accent" />
-                                        <h5 className="text-xs font-black uppercase tracking-wider text-accent">Customer Instructions</h5>
+                                        <h5 className="text-xs font-black uppercase tracking-wider text-accent font-arabic">ملاحظات وتعليمات العميل</h5>
                                       </div>
-                                      <p className="text-primary font-bold text-xs italic">"{order.notes}"</p>
+                                      <p className="text-primary font-bold text-xs italic font-arabic">"{order.notes}"</p>
                                     </div>
                                   )}
                                 </div>
@@ -299,13 +299,13 @@ export function AdminOrders() {
                           </td>
                         </tr>
                       )}
-                    </>
+                    </tbody>
                   );
                 })}
           </tbody>
         </table>
         {!isLoading && filtered.length === 0 && (
-          <div className="text-center py-16 text-primary/30 font-bold">No orders found</div>
+          <div className="text-center py-16 text-primary/30 font-bold font-arabic">لم يتم العثور على أي طلبات</div>
         )}
       </div>
     </AdminLayout>

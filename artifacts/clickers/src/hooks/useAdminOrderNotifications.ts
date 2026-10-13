@@ -10,10 +10,10 @@ export interface NewOrderPayload {
 }
 
 const PM_LABEL: Record<string, string> = {
-  bank_transfer: 'Bank Transfer',
-  instapay: 'InstaPay',
-  vodafone_cash: 'Vodafone Cash',
-  stripe: 'Online (Stripe)',
+  bank_transfer: 'تحويل بنكي',
+  instapay: 'إنستاباي (InstaPay)',
+  vodafone_cash: 'فودافون كاش',
+  stripe: 'دفع إلكتروني (بطاقة)',
 };
 
 /** Generates a professional 3-beep alert using the Web Audio API */
@@ -76,8 +76,8 @@ export function useAdminOrderNotifications(
 
           // 4. Browser push notification (if permission granted)
           if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-            new Notification('🛒 New Order Received!', {
-              body: `${PM_LABEL[order.payment_method] ?? order.payment_method} — ${Number(order.total_amount).toFixed(2)} EGP`,
+            new Notification('🛒 طلب جديد وارد في المتجر!', {
+              body: `${PM_LABEL[order.payment_method] ?? order.payment_method} — ${Number(order.total_amount).toFixed(2)} ج.م`,
               icon: '/favicon.ico',
             });
           }

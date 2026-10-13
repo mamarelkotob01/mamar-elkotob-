@@ -16,15 +16,15 @@ interface ExportCard {
 }
 
 const exportCards: ExportCard[] = [
-  { type: 'books', title: 'Books Catalog', description: 'All books with pricing, format, author, and status', icon: BookOpen, color: 'bg-blue-50 text-blue-600' },
-  { type: 'authors', title: 'Authors List', description: 'Author profiles with social media and bio', icon: Users, color: 'bg-purple-50 text-purple-600' },
-  { type: 'orders', title: 'Orders Report', description: 'All orders with customer, status, and total amount', icon: ShoppingBag, color: 'bg-green-50 text-green-600' },
+  { type: 'books', title: 'كتالوج الكتب والمؤلفات', description: 'تصدير كامل لكافة الكتب مع الأسعار، نوع الإصدار، حالة النشر، والمؤلف', icon: BookOpen, color: 'bg-blue-50 text-blue-600' },
+  { type: 'authors', title: 'سجل المؤلفين والكُتّاب', description: 'بيانات الكُتاب مع السير الذاتية والجنسية وحسابات التواصل الاجتماعي', icon: Users, color: 'bg-purple-50 text-purple-600' },
+  { type: 'orders', title: 'تقرير المبيعات والطلبات', description: 'سجل تفصيلي لجميع طلبات الشراء مع بيانات العملاء وطرق الدفع وعناوين الشحن', icon: ShoppingBag, color: 'bg-green-50 text-green-600' },
 ];
 
 function downloadExcel(data: Record<string, unknown>[], filename: string) {
   const ws = XLSX.utils.json_to_sheet(data);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Data');
+  XLSX.utils.book_append_sheet(wb, ws, 'البيانات');
 
   // Style the header row
   const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
@@ -51,34 +51,34 @@ export function AdminExports() {
     switch (type) {
       case 'books': {
         const rows = (books ?? []).map((b) => ({
-          'ID': b.id,
-          'Arabic Title': b.title_ar,
-          'English Title': b.title_en,
-          'Genre': b.genre,
-          'Format': b.format,
-          'Price (EGP)': b.price,
-          'Original Price': b.original_price || '',
-          'Pages': b.pages,
-          'Status': b.status,
-          'Featured': b.is_featured ? 'Yes' : 'No',
-          'New': b.is_new ? 'Yes' : 'No',
-          'Rating': b.rating,
-          'Reviews': b.review_count,
-          'Published Date': b.published_date,
+          'معرّف الكتاب (ID)': b.id,
+          'العنوان بالعربية': b.title_ar,
+          'العنوان بالإنجليزية': b.title_en,
+          'التصنيف الأدبي': b.genre,
+          'نوع الإصدار': b.format,
+          'السعر الحالي (ج.م)': b.price,
+          'السعر الأصلي (ج.م)': b.original_price || '',
+          'عدد الصفحات': b.pages,
+          'حالة النشر': b.status,
+          'مميز': b.is_featured ? 'نعم' : 'لا',
+          'إصدار جديد': b.is_new ? 'نعم' : 'لا',
+          'التقييم': b.rating,
+          'عدد المراجعات': b.review_count,
+          'تاريخ النشر': b.published_date,
         }));
         downloadExcel(rows, 'books_catalog');
         break;
       }
       case 'authors': {
         const rows = (authors ?? []).map((a) => ({
-          'ID': a.id,
-          'Arabic Name': a.name_ar,
-          'English Name': a.name_en,
-          'Nationality': a.nationality || '',
-          'Instagram': a.instagram || '',
-          'Twitter': a.twitter || '',
-          'Website': a.website || '',
-          'Created': format(new Date(a.created_at), 'yyyy-MM-dd'),
+          'المعرّف (ID)': a.id,
+          'الاسم بالعربية': a.name_ar,
+          'الاسم بالإنجليزية': a.name_en,
+          'الجنسية': a.nationality || '',
+          'إنستغرام': a.instagram || '',
+          'تويتر / X': a.twitter || '',
+          'الموقع الإلكتروني': a.website || '',
+          'تاريخ الإضافة': format(new Date(a.created_at), 'yyyy-MM-dd'),
         }));
         downloadExcel(rows, 'authors_list');
         break;
@@ -95,23 +95,23 @@ export function AdminExports() {
           
           // Flatten book titles into a single string
           const bookTitles = typedOrder.order_items?.map(item => 
-            `${item.books?.title_en || 'Unknown'} (${item.quantity}x)`
-          ).join(', ') || 'No Items';
+            `${item.books?.title_ar || item.books?.title_en || 'كتاب غير محدد'} (${item.quantity}x)`
+          ).join('، ') || 'لا توجد عناصر';
 
           return {
-            'Order ID': o.id,
-            'Date': format(new Date(o.created_at), 'yyyy-MM-dd HH:mm'),
-            'Customer Name': typedOrder.profiles?.full_name || 'Anonymous',
-            'Customer Email': typedOrder.profiles?.email || '',
-            'Customer Phone': typedOrder.profiles?.phone || '',
-            'Books Purchased': bookTitles,
-            'Total Paid (EGP)': o.total_amount,
-            'Status': o.status.toUpperCase(),
-            'Payment Method': o.payment_method || 'N/A',
-            'Transaction ID': typedOrder.transaction_id || 'N/A',
-            'Shipping Address': typedOrder.shipping_address || '',
-            'Customer Notes': typedOrder.notes || '',
-            'Items Count': typedOrder.order_items?.length || 0,
+            'رقم الطلب': o.id,
+            'تاريخ الطلب': format(new Date(o.created_at), 'yyyy-MM-dd HH:mm'),
+            'اسم العميل': typedOrder.profiles?.full_name || 'غير مسجل',
+            'البريد الإلكتروني': typedOrder.profiles?.email || '',
+            'رقم الهاتف': typedOrder.profiles?.phone || '',
+            'الكتب المطلوبة': bookTitles,
+            'الإجمالي المدفوع (ج.م)': o.total_amount,
+            'حالة الطلب': o.status,
+            'طريقة الدفع': o.payment_method || 'غير محدد',
+            'رقم المعاملة / التحويل': typedOrder.transaction_id || 'لا يوجد',
+            'عنوان التوصيل': typedOrder.shipping_address || '',
+            'ملاحظات العميل': typedOrder.notes || '',
+            'عدد العناصر': typedOrder.order_items?.length || 0,
           };
         });
         downloadExcel(rows, 'orders_report_detailed');
@@ -123,17 +123,17 @@ export function AdminExports() {
   return (
     <AdminLayout>
       <AdminPageHeader
-        title="Export Reports"
-        subtitle="Download platform data as Excel spreadsheets for analysis"
+        title="تصدير التقارير والبيانات"
+        subtitle="تحميل تقارير الكتالوج والطلبات والمؤلفين كجداول إكسل (Excel) جاهزة للتحليل"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6" dir="rtl">
         {exportCards.map((card, i) => {
           const Icon = card.icon;
           return (
             <motion.div
               key={card.type}
-              className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl border border-border p-8 hover:shadow-xl hover:shadow-primary/5 transition-all group cursor-pointer"
+              className="bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl rounded-3xl border border-border p-8 hover:shadow-xl hover:shadow-primary/5 transition-all group cursor-pointer text-right"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
@@ -145,15 +145,15 @@ export function AdminExports() {
                   <Icon size={28} />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-black text-primary font-cinematic mb-2">{card.title}</h3>
-                  <p className="text-primary/50 font-bold text-sm leading-relaxed mb-6">{card.description}</p>
+                  <h3 className="text-xl font-black text-primary font-arabic mb-2">{card.title}</h3>
+                  <p className="text-primary/50 font-bold text-sm leading-relaxed mb-6 font-arabic">{card.description}</p>
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-black text-xs uppercase tracking-wider group-hover:bg-accent group-hover:text-primary transition-all">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-black text-xs uppercase tracking-wider group-hover:bg-accent group-hover:text-primary transition-all font-arabic">
                       <Download size={14} />
-                      <span>Download Excel</span>
+                      <span>تحميل كملف إكسل</span>
                     </div>
                     <FileSpreadsheet size={16} className="text-green-500" />
-                    <span className="text-green-600 font-bold text-xs">.xlsx</span>
+                    <span className="text-green-600 font-bold text-xs" dir="ltr">.xlsx</span>
                   </div>
                 </div>
               </div>
@@ -162,14 +162,14 @@ export function AdminExports() {
         })}
       </div>
 
-      <div className="mt-8 bg-primary/5 border border-primary/10 rounded-3xl p-8">
-        <h3 className="text-lg font-black text-primary font-cinematic mb-3">📊 Tips for Using Reports</h3>
-        <ul className="space-y-2 text-primary/60 font-bold text-sm">
-          <li>• Reports are generated instantly from live database data</li>
-          <li>• Files are formatted with the Dar Zahmet Kotab brand colors</li>
-          <li>• Open with Microsoft Excel, Google Sheets, or LibreOffice</li>
-          <li>• Sales report includes the past 30 days by default</li>
-          <li>• All prices are in Egyptian Pound (EGP)</li>
+      <div className="mt-8 bg-primary/5 border border-primary/10 rounded-3xl p-8 text-right" dir="rtl">
+        <h3 className="text-lg font-black text-primary font-arabic mb-3">📊 إرشادات استخدام التقارير وملفات الإكسل</h3>
+        <ul className="space-y-2 text-primary/70 font-bold text-sm font-arabic">
+          <li>• يتم استخراج وتوليد التقارير لحظياً ومباشرة من قاعدة البيانات المحدثة</li>
+          <li>• الملفات منسقة بألوان وهوية دار زحمة كتاب الرسمية</li>
+          <li>• الملفات متوافقة مع Microsoft Excel و Google Sheets و LibreOffice</li>
+          <li>• يشمل تقرير الطلبات تفاصيل العملاء وأرقام المعاملات وعناوين الشحن</li>
+          <li>• جميع المبالغ والأسعار مقومة بالجنيه المصري (ج.م)</li>
         </ul>
       </div>
     </AdminLayout>

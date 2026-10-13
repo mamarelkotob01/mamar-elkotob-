@@ -7,24 +7,13 @@ import {
   Play, Bell, Menu, X, ExternalLink,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/useAuth';
+import { useLanguage } from '@/i18n/LanguageContext';
 import { useAdminOrderNotifications, type NewOrderPayload } from '@/hooks/useAdminOrderNotifications';
 import { OrderNotificationToasts } from '@/components/admin/OrderNotifications';
 
 interface OrderToast extends NewOrderPayload { toastId: string; }
 
 let toastCounter = 0;
-
-const navItems = [
-  { href: '/admin',           label: 'Dashboard',       icon: LayoutDashboard },
-  { href: '/admin/books',     label: 'Books',           icon: BookOpen },
-  { href: '/admin/authors',   label: 'Authors',         icon: Users },
-  { href: '/admin/worlds',    label: 'Worlds',          icon: Globe },
-  { href: '/admin/blog',      label: 'Blog',            icon: PenTool },
-  { href: '/admin/orders',    label: 'Orders',          icon: ShoppingBag },
-  { href: '/admin/analytics', label: 'Analytics',       icon: BarChart3 },
-  { href: '/admin/media',     label: 'Media Hub',       icon: Play },
-  { href: '/admin/exports',   label: 'Export Reports',  icon: Download },
-];
 
 function AdminSidebar({
   newOrderCount,
@@ -39,12 +28,25 @@ function AdminSidebar({
 }) {
   const [location] = useLocation();
   const { profile, signOut } = useAuth();
+  const { isRTL } = useLanguage();
+
+  const navItems = [
+    { href: '/admin',           label: isRTL ? 'لوحة التحكم' : 'Dashboard',       icon: LayoutDashboard },
+    { href: '/admin/books',     label: isRTL ? 'الكتب والإصدارات' : 'Books',       icon: BookOpen },
+    { href: '/admin/authors',   label: isRTL ? 'المؤلفون' : 'Authors',         icon: Users },
+    { href: '/admin/worlds',    label: isRTL ? 'العوالم والقصص' : 'Worlds',          icon: Globe },
+    { href: '/admin/blog',      label: isRTL ? 'المدونة والمقالات' : 'Blog',            icon: PenTool },
+    { href: '/admin/orders',    label: isRTL ? 'إدارة الطلبات' : 'Orders',          icon: ShoppingBag },
+    { href: '/admin/analytics', label: isRTL ? 'التحليلات والمبيعات' : 'Analytics',       icon: BarChart3 },
+    { href: '/admin/media',     label: isRTL ? 'مكتبة الوسائط' : 'Media Hub',       icon: Play },
+    { href: '/admin/exports',   label: isRTL ? 'تصدير التقارير' : 'Export Reports',  icon: Download },
+  ];
 
   return (
     <motion.aside
       animate={{ width: collapsed ? 72 : 240 }}
       transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-      className="flex-shrink-0 admin-sidebar flex flex-col relative z-20"
+      className={`flex-shrink-0 admin-sidebar flex flex-col relative z-20 ${isRTL ? 'border-l border-white/5' : 'border-r border-white/5'}`}
       style={{ minHeight: '100vh' }}
     >
       {/* Header */}
@@ -60,12 +62,14 @@ function AdminSidebar({
             className="flex-1 min-w-0"
           >
             <p className="text-white font-bold text-sm font-arabic truncate">ممر الكتب</p>
-            <p className="text-slate-400 text-[10px] uppercase tracking-widest">Admin Panel</p>
+            <p className="text-slate-400 text-[10px] uppercase tracking-widest font-arabic">
+              {isRTL ? 'لوحة الإدارة' : 'Admin Panel'}
+            </p>
           </motion.div>
         )}
         <button
           onClick={onToggle}
-          className="ml-auto p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-all flex-shrink-0"
+          className="ms-auto p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-all flex-shrink-0"
         >
           {collapsed ? <Menu size={16} /> : <X size={16} />}
         </button>
@@ -76,10 +80,14 @@ function AdminSidebar({
         <div className="px-3 pt-3">
           <button
             onClick={onBellClick}
-            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl admin-alert-btn font-bold text-xs animate-pulse hover:animate-none transition-all"
+            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl admin-alert-btn font-bold text-xs animate-pulse hover:animate-none transition-all font-arabic"
           >
             <Bell size={14} />
-            <span className="flex-1 text-left">{newOrderCount} New Order{newOrderCount > 1 ? 's' : ''}!</span>
+            <span className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+              {isRTL 
+                ? `${newOrderCount} ${newOrderCount === 1 ? 'طلب جديد!' : newOrderCount === 2 ? 'طلبان جديدان!' : 'طلبات جديدة!'}` 
+                : `${newOrderCount} New Order${newOrderCount > 1 ? 's' : ''}!`}
+            </span>
             <span className="w-5 h-5 bg-white/20 rounded-full text-[10px] font-black flex items-center justify-center">
               {newOrderCount > 9 ? '9+' : newOrderCount}
             </span>
@@ -111,23 +119,25 @@ function AdminSidebar({
                     ? 'admin-nav-active text-white'
                     : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
-                whileHover={{ x: 2 }}
+                whileHover={{ x: isRTL ? -2 : 2 }}
                 whileTap={{ scale: 0.97 }}
                 title={collapsed ? item.label : undefined}
               >
                 <Icon size={17} className="flex-shrink-0" />
                 {!collapsed && (
-                  <span className="font-semibold text-sm flex-1 truncate">{item.label}</span>
+                  <span className="font-semibold text-sm flex-1 truncate font-arabic">{item.label}</span>
                 )}
                 {isOrders && newOrderCount > 0 && !collapsed && (
                   <span className="w-5 h-5 bg-red-500 text-white rounded-full text-[10px] font-black flex items-center justify-center flex-shrink-0">
                     {newOrderCount > 9 ? '9+' : newOrderCount}
                   </span>
                 )}
-                {isActive && !collapsed && <ChevronRight size={12} className="text-white/40 flex-shrink-0" />}
+                {isActive && !collapsed && (
+                  <ChevronRight size={12} className={`text-white/40 flex-shrink-0 ${isRTL ? 'rotate-180' : ''}`} />
+                )}
                 {/* Tooltip when collapsed */}
                 {collapsed && (
-                  <div className="admin-tooltip absolute left-full ml-3 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                  <div className={`admin-tooltip absolute ${isRTL ? 'right-full mr-3' : 'left-full ml-3'} px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 font-arabic`}>
                     {item.label}
                   </div>
                 )}
@@ -146,17 +156,19 @@ function AdminSidebar({
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-white text-xs font-semibold truncate">{profile.full_name || profile.email}</p>
-              <p className="text-slate-500 text-[10px] capitalize">{profile.role}</p>
+              <p className="text-slate-500 text-[10px] capitalize font-arabic">
+                {profile.role === 'admin' && isRTL ? 'مدير النظام' : profile.role}
+              </p>
             </div>
           </div>
         )}
         <button
           onClick={signOut}
-          title={collapsed ? 'Sign Out' : undefined}
-          className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-150 font-semibold text-sm"
+          title={collapsed ? (isRTL ? 'تسجيل الخروج' : 'Sign Out') : undefined}
+          className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-150 font-semibold text-sm font-arabic"
         >
-          <LogOut size={15} className="flex-shrink-0" />
-          {!collapsed && <span>Sign Out</span>}
+          <LogOut size={15} className={`flex-shrink-0 ${isRTL ? 'rotate-180' : ''}`} />
+          {!collapsed && <span>{isRTL ? 'تسجيل الخروج' : 'Sign Out'}</span>}
         </button>
       </div>
     </motion.aside>
@@ -165,6 +177,7 @@ function AdminSidebar({
 
 export function AdminLayout({ children }: { children: ReactNode }) {
   const { isAdmin, isLoading, profile } = useAuth();
+  const { isRTL } = useLanguage();
   const [, navigate] = useLocation();
   const [toasts, setToasts] = useState<OrderToast[]>([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -199,7 +212,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen admin-bg">
+    <div className={`flex min-h-screen admin-bg ${isRTL ? 'font-arabic' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
       <AdminSidebar
         newOrderCount={toasts.length}
         onBellClick={() => navigate('/admin/orders')}
@@ -215,7 +228,9 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             </div>
             <div>
               <h2 className="text-white font-bold text-sm font-arabic leading-tight">لوحة إدارة ممر الكتب</h2>
-              <p className="text-slate-400 text-[10px] uppercase tracking-wider">Control Center</p>
+              <p className="text-slate-400 text-[10px] uppercase tracking-wider font-arabic">
+                {isRTL ? 'مركز التحكم' : 'Control Center'}
+              </p>
             </div>
           </div>
 
@@ -234,7 +249,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             <button
               onClick={() => navigate('/admin/orders')}
               className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all"
-              title="Orders Alerts"
+              title={isRTL ? 'تنبيهات الطلبات' : 'Orders Alerts'}
             >
               <Bell size={16} />
               {toasts.length > 0 && (
@@ -250,12 +265,12 @@ export function AdminLayout({ children }: { children: ReactNode }) {
               <div className="w-8 h-8 rounded-lg bg-violet-600/30 border border-violet-500/40 text-violet-300 font-bold flex items-center justify-center text-xs shadow-inner">
                 {(profile?.full_name || profile?.email || 'A')[0].toUpperCase()}
               </div>
-              <div className="hidden sm:flex flex-col text-left">
+              <div className={`hidden sm:flex flex-col ${isRTL ? 'text-right' : 'text-left'}`}>
                 <span className="text-white text-xs font-semibold truncate max-w-[130px]">
                   {profile?.full_name || profile?.email}
                 </span>
                 <span className="text-slate-500 text-[9px] uppercase tracking-widest font-mono">
-                  {profile?.role || 'Admin'}
+                  {profile?.role === 'admin' && isRTL ? 'مدير النظام' : (profile?.role || 'Admin')}
                 </span>
               </div>
             </div>
@@ -267,15 +282,17 @@ export function AdminLayout({ children }: { children: ReactNode }) {
           <div className="admin-banner border-b px-6 py-3 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <Bell size={15} className="text-violet-400 flex-shrink-0" />
-              <p className="text-sm font-medium text-slate-300">
-                Enable browser notifications to receive order alerts even when you're on another tab.
+              <p className="text-sm font-medium text-slate-300 font-arabic">
+                {isRTL
+                  ? 'فعّل إشعارات المتصفح لتلقي تنبيهات الطلبات الفورية حتى وأنت تتصفح تبويباً آخر.'
+                  : 'Enable browser notifications to receive order alerts even when you\'re on another tab.'}
               </p>
             </div>
             <button
               onClick={requestPermission}
-              className="px-4 py-1.5 admin-btn-primary font-semibold text-xs uppercase tracking-wide rounded-lg flex-shrink-0"
+              className="px-4 py-1.5 admin-btn-primary font-semibold text-xs uppercase tracking-wide rounded-lg flex-shrink-0 font-arabic"
             >
-              Enable
+              {isRTL ? 'تفعيل الإشعارات' : 'Enable'}
             </button>
           </div>
         )}

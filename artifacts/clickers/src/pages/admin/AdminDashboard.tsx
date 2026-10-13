@@ -10,6 +10,7 @@ import { useAnalytics } from '@/services/supabase.hooks';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { format } from 'date-fns';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 // Fetch live counts directly from tables (works without DB views)
 function useAdminCounts() {
@@ -32,14 +33,14 @@ function useAdminCounts() {
 }
 
 // Custom Recharts tooltip for the admin dark theme
-const AdminTooltip = ({ active, payload, label }: any) => {
+const AdminTooltip = ({ active, payload, label, isRTL }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="admin-chart-tooltip px-3 py-2 text-xs font-semibold shadow-xl">
+    <div className={`admin-chart-tooltip px-3 py-2 text-xs font-semibold shadow-xl ${isRTL ? 'text-right font-arabic' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
       <p className="text-slate-400 mb-1">{label}</p>
       {payload.map((p: any) => (
         <p key={p.dataKey} style={{ color: p.color }}>
-          {p.name}: {p.dataKey === 'revenue' ? `${p.value.toLocaleString()} EGP` : p.value}
+          {p.name}: {p.dataKey === 'revenue' ? `${p.value.toLocaleString()} ${isRTL ? 'ج.م' : 'EGP'}` : p.value}
         </p>
       ))}
     </div>
@@ -47,6 +48,7 @@ const AdminTooltip = ({ active, payload, label }: any) => {
 };
 
 export function AdminDashboard() {
+  const { isRTL } = useLanguage();
   const { data: analytics, isLoading } = useAnalytics();
   const { data: counts } = useAdminCounts();
 
@@ -61,26 +63,26 @@ export function AdminDashboard() {
 
   const stats = [
     {
-      label: 'Total Revenue',
-      value: `${(analytics?.totalRevenue ?? 0).toLocaleString()} EGP`,
+      label: isRTL ? 'إجمالي الإيرادات' : 'Total Revenue',
+      value: `${(analytics?.totalRevenue ?? 0).toLocaleString()} ${isRTL ? 'ج.م' : 'EGP'}`,
       icon: TrendingUp,
       trend: undefined,
       color: 'violet' as const,
     },
     {
-      label: 'Total Orders',
+      label: isRTL ? 'إجمالي الطلبات' : 'Total Orders',
       value: analytics?.totalOrders ?? 0,
       icon: ShoppingBag,
       color: 'sky' as const,
     },
     {
-      label: 'Users',
+      label: isRTL ? 'المستخدمون' : 'Users',
       value: analytics?.totalUsers ?? 0,
       icon: Users,
       color: 'emerald' as const,
     },
     {
-      label: 'Pending Orders',
+      label: isRTL ? 'طلبات قيد الانتظار' : 'Pending Orders',
       value: analytics?.pendingOrders ?? 0,
       icon: Package,
       color: 'amber' as const,
@@ -90,8 +92,8 @@ export function AdminDashboard() {
   return (
     <AdminLayout>
       <AdminPageHeader
-        title="Dashboard"
-        subtitle="Welcome back. Here's what's happening today."
+        title={isRTL ? "لوحة التحكم الرئيسية" : "Dashboard"}
+        subtitle={isRTL ? "مرحباً بك مجدداً. إليك ملخص لأهم مؤشرات وأنشطة المنصة اليوم." : "Welcome back. Here's what's happening today."}
       />
 
       {/* Stat Cards */}
@@ -119,10 +121,10 @@ export function AdminDashboard() {
       {/* Extra info row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Total Books', value: counts?.totalBooks ?? '—', color: '#a78bfa' },
-          { label: 'Total Authors', value: counts?.totalAuthors ?? '—', color: '#60a5fa' },
-          { label: 'Delivered', value: (analytics?.totalOrders ?? 0) - (analytics?.pendingOrders ?? 0), color: '#34d399' },
-          { label: 'Cancelled', value: 0, color: '#f87171' },
+          { label: isRTL ? 'إجمالي الكتب' : 'Total Books', value: counts?.totalBooks ?? '—', color: '#a78bfa' },
+          { label: isRTL ? 'إجمالي المؤلفين' : 'Total Authors', value: counts?.totalAuthors ?? '—', color: '#60a5fa' },
+          { label: isRTL ? 'تم التسليم' : 'Delivered', value: (analytics?.totalOrders ?? 0) - (analytics?.pendingOrders ?? 0), color: '#34d399' },
+          { label: isRTL ? 'ملغاة' : 'Cancelled', value: 0, color: '#f87171' },
         ].map((item, i) => (
           <motion.div
             key={item.label}
@@ -134,7 +136,7 @@ export function AdminDashboard() {
             <div className="w-2 h-10 rounded-full flex-shrink-0" style={{ background: item.color }} />
             <div>
               <p className="text-white font-bold text-xl tabular-nums">{item.value}</p>
-              <p className="text-slate-500 text-xs uppercase tracking-wider">{item.label}</p>
+              <p className="text-slate-400 text-xs uppercase tracking-wider font-arabic">{item.label}</p>
             </div>
           </motion.div>
         ))}
@@ -151,8 +153,12 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-base font-bold text-white">Revenue Overview</h2>
-              <p className="text-slate-500 text-xs mt-0.5">Last 14 days</p>
+              <h2 className="text-base font-bold text-white font-arabic">
+                {isRTL ? 'مؤشر الإيرادات اليومية' : 'Revenue Overview'}
+              </h2>
+              <p className="text-slate-400 text-xs mt-0.5 font-arabic">
+                {isRTL ? 'خلال آخر 14 يوماً' : 'Last 14 days'}
+              </p>
             </div>
             <BarChart3 className="text-violet-400" size={18} />
           </div>
@@ -172,11 +178,11 @@ export function AdminDashboard() {
                   axisLine={false} tickLine={false}
                 />
                 <YAxis hide />
-                <Tooltip content={<AdminTooltip />} />
+                <Tooltip content={<AdminTooltip isRTL={isRTL} />} />
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  name="Revenue"
+                  name={isRTL ? "الإيرادات" : "Revenue"}
                   stroke="#7c3aed"
                   strokeWidth={2.5}
                   fill="url(#revenueGradAdmin)"
@@ -188,8 +194,12 @@ export function AdminDashboard() {
           ) : (
             <div className="h-[210px] flex flex-col items-center justify-center gap-3">
               <BarChart3 size={32} className="text-slate-700" />
-              <p className="text-slate-600 text-sm font-medium">No sales data yet</p>
-              <p className="text-slate-700 text-xs">Revenue will appear here once orders are placed</p>
+              <p className="text-slate-400 text-sm font-medium font-arabic">
+                {isRTL ? 'لا توجد بيانات مبيعات مسجلة حتى الآن' : 'No sales data yet'}
+              </p>
+              <p className="text-slate-500 text-xs font-arabic">
+                {isRTL ? 'ستظهر بيانات الإيرادات والرسوم البيانية هنا بمجرد إتمام عمليات الشراء' : 'Revenue will appear here once orders are placed'}
+              </p>
             </div>
           )}
         </motion.div>
@@ -202,10 +212,12 @@ export function AdminDashboard() {
           transition={{ delay: 0.22 }}
         >
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-base font-bold text-white">Top Books</h2>
+            <h2 className="text-base font-bold text-white font-arabic">
+              {isRTL ? 'الكتب الأكثر طلباً' : 'Top Books'}
+            </h2>
             <Link href="/admin/analytics">
-              <span className="text-violet-400 text-xs font-semibold cursor-pointer hover:text-violet-300 transition-colors uppercase tracking-wider">
-                See All
+              <span className="text-violet-400 text-xs font-semibold cursor-pointer hover:text-violet-300 transition-colors uppercase tracking-wider font-arabic">
+                {isRTL ? 'عرض التحليلات الكاملة' : 'See All'}
               </span>
             </Link>
           </div>
@@ -234,14 +246,18 @@ export function AdminDashboard() {
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="text-slate-200 font-semibold text-sm line-clamp-1">{book.title_ar || book.title_en}</p>
-                  <p className="text-violet-400 font-bold text-xs mt-0.5">{book.total_sold ?? 0} sold</p>
+                  <p className="text-violet-400 font-bold text-xs mt-0.5 font-arabic">
+                    {book.total_sold ?? 0} {isRTL ? 'نسخة مباعة' : 'sold'}
+                  </p>
                 </div>
               </motion.div>
             ))}
             {(analytics?.topBooks ?? []).length === 0 && (
               <div className="py-8 flex flex-col items-center gap-2">
                 <BookOpen size={28} className="text-slate-700" />
-                <p className="text-slate-600 text-sm">No sales data yet</p>
+                <p className="text-slate-500 text-sm font-arabic">
+                  {isRTL ? 'لا توجد بيانات مبيعات بعد' : 'No sales data yet'}
+                </p>
               </div>
             )}
           </div>
@@ -256,10 +272,10 @@ export function AdminDashboard() {
         transition={{ delay: 0.35 }}
       >
         {[
-          { href: '/admin/books',     label: 'Add Book',       icon: PlusCircle,  color: '#7c3aed' },
-          { href: '/admin/authors',   label: 'Authors',        icon: Users,       color: '#4f46e5' },
-          { href: '/admin/orders',    label: 'Orders',         icon: Eye,         color: '#0ea5e9' },
-          { href: '/admin/exports',   label: 'Export Data',    icon: FileDown,    color: '#10b981' },
+          { href: '/admin/books',     label: isRTL ? 'إضافة كتاب جديد' : 'Add Book',          icon: PlusCircle,  color: '#7c3aed' },
+          { href: '/admin/authors',   label: isRTL ? 'إدارة المؤلفين' : 'Authors',           icon: Users,       color: '#4f46e5' },
+          { href: '/admin/orders',    label: isRTL ? 'متابعة الطلبات' : 'Orders',            icon: Eye,         color: '#0ea5e9' },
+          { href: '/admin/exports',   label: isRTL ? 'تصدير التقارير (Excel)' : 'Export Data', icon: FileDown,    color: '#10b981' },
         ].map((action) => {
           const Icon = action.icon;
           return (
@@ -274,7 +290,7 @@ export function AdminDashboard() {
                 >
                   <Icon size={20} />
                 </div>
-                <span className="text-slate-400 group-hover:text-slate-200 font-semibold text-xs uppercase tracking-wider text-center transition-colors">
+                <span className="text-slate-400 group-hover:text-slate-200 font-semibold text-xs tracking-wider text-center transition-colors font-arabic">
                   {action.label}
                 </span>
               </motion.div>

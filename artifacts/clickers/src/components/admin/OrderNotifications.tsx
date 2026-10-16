@@ -9,6 +9,7 @@ const PM_LABEL: Record<string, { ar: string; en: string }> = {
   bank_transfer: { ar: 'تحويل بنكي', en: 'Bank Transfer' },
   instapay: { ar: 'انستاباي (InstaPay)', en: 'InstaPay' },
   vodafone_cash: { ar: 'فودافون كاش', en: 'Vodafone Cash' },
+  etisalat_cash: { ar: 'اتصالات كاش', en: 'Etisalat Cash' },
   stripe: { ar: 'دفع إلكتروني', en: 'Online (Stripe)' },
 };
 

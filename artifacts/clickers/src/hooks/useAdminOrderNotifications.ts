@@ -13,6 +13,7 @@ const PM_LABEL: Record<string, string> = {
   bank_transfer: 'تحويل بنكي',
   instapay: 'إنستاباي (InstaPay)',
   vodafone_cash: 'فودافون كاش',
+  etisalat_cash: 'اتصالات كاش',
   stripe: 'دفع إلكتروني (بطاقة)',
 };
 

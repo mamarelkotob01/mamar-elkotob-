@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'wouter';
 import { ShoppingBag, CheckCircle, CreditCard, ArrowRight, Trash2, AlertCircle } from 'lucide-react';
@@ -18,8 +18,9 @@ export function CheckoutPage() {
   const [, navigate] = useLocation();
 
   const [step, setStep] = useState<Step>('cart');
-  const [paymentMethod, setPaymentMethod] = useState<'instapay' | 'vodafone_cash'>('instapay');
+  const [paymentMethod, setPaymentMethod] = useState<'etisalat_cash'>('etisalat_cash');
   const [transactionId, setTransactionId] = useState('');
+  const [copied, setCopied] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: profile?.full_name || '', phone: profile?.phone || '', address: '', notes: '' });
 
@@ -40,7 +41,7 @@ export function CheckoutPage() {
         paymentMethod,
         shippingAddress: formData.address,
         notes: formData.notes,
-        transactionId: ['instapay', 'vodafone_cash'].includes(paymentMethod) ? transactionId : undefined,
+        transactionId: paymentMethod === 'etisalat_cash' ? transactionId : undefined,
       });
       setOrderId(order.id as string);
       clear();
@@ -239,10 +240,16 @@ export function CheckoutPage() {
                     </h3>
                     <div className="space-y-3">
                       {([
-                        { value: 'instapay', label: 'InstaPay', desc: isRTL ? 'تحويل فوري عبر انستا باي' : 'Instant transfer via InstaPay' },
-                        { value: 'vodafone_cash', label: isRTL ? 'فودافون كاش' : 'Vodafone Cash', desc: isRTL ? 'تحويل عبر محفظة فودافون' : 'Transfer via Vodafone wallet' },
+                        {
+                          value: 'etisalat_cash',
+                          label: isRTL ? 'اتصالات كاش' : 'Etisalat Cash',
+                          desc: isRTL ? 'تحويل عبر محفظة اتصالات كاش' : 'Transfer via Etisalat Cash wallet',
+                        },
                       ] as const).map((method) => (
-                        <label key={method.value} className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all ${paymentMethod === method.value ? 'border-primary bg-primary/5' : 'border-border bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl hover:border-primary/30'} ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <label
+                          key={method.value}
+                          className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all border-primary bg-primary/5 ${isRTL ? 'flex-row-reverse' : ''}`}
+                        >
                           <input
                             type="radio"
                             name="payment"
@@ -251,8 +258,8 @@ export function CheckoutPage() {
                             onChange={() => setPaymentMethod(method.value)}
                             className="sr-only"
                           />
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${paymentMethod === method.value ? 'border-primary' : 'border-border'}`}>
-                            {paymentMethod === method.value && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                          <div className="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center flex-shrink-0">
+                            <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                           </div>
                           <div className={isRTL ? 'text-right' : ''}>
                             <p className="font-black text-primary text-sm">{method.label}</p>
@@ -264,7 +271,7 @@ export function CheckoutPage() {
                     </div>
 
                     <AnimatePresence>
-                      {['instapay', 'vodafone_cash'].includes(paymentMethod) && (
+                      {paymentMethod === 'etisalat_cash' && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
@@ -279,19 +286,21 @@ export function CheckoutPage() {
                             </p>
                             <div className={`flex items-center justify-between gap-3 bg-card/70 backdrop-blur-xl border-card-border/50 shadow-2xl border border-accent/20 rounded-xl px-5 py-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
                               <div>
-                                <p className="font-mono font-black text-primary text-xl tracking-wider">01011088867</p>
+                                <p className="font-mono font-black text-primary text-xl tracking-wider">01148998027</p>
                                 <p className="text-primary/40 text-xs font-bold mt-0.5">
-                                  {paymentMethod === 'instapay'
-                                    ? (isRTL ? 'حساب انستا باي' : 'InstaPay Account')
-                                    : (isRTL ? 'محفظة فودافون كاش' : 'Vodafone Cash Wallet')}
+                                  {isRTL ? 'محفظة اتصالات كاش' : 'Etisalat Cash Wallet'}
                                 </p>
                               </div>
                               <button
                                 type="button"
-                                onClick={() => { navigator.clipboard.writeText('01011088867'); }}
+                                onClick={() => {
+                                  navigator.clipboard.writeText('01148998027');
+                                  setCopied(true);
+                                  setTimeout(() => setCopied(false), 2000);
+                                }}
                                 className="text-xs font-black uppercase tracking-wider text-accent hover:text-primary transition-colors border border-accent/30 rounded-xl px-3 py-2 hover:border-primary/30"
                               >
-                                {isRTL ? 'نسخ' : 'Copy'}
+                                {copied ? (isRTL ? 'تم النسخ!' : 'Copied!') : (isRTL ? 'نسخ' : 'Copy')}
                               </button>
                             </div>
                           </div>
@@ -342,7 +351,7 @@ export function CheckoutPage() {
 
                   <div className="flex flex-col gap-3">
                     {(() => {
-                      const isPaymentIncomplete = ['instapay', 'vodafone_cash'].includes(paymentMethod) && !transactionId.trim();
+                      const isPaymentIncomplete = paymentMethod === 'etisalat_cash' && !transactionId.trim();
                       const isDisabled = !profile || createOrder.isPending || !formData.address.trim() || !formData.phone.trim() || isPaymentIncomplete;
                       
                       return (

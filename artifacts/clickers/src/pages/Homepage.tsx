@@ -28,20 +28,20 @@ function HeroSection() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full pt-28 pb-20">
           {/* Text block */}
           <motion.div
-            className={`max-w-xl ${isRTL ? 'text-right mr-auto ml-0' : 'text-left'}`}
+            className={`max-w-2xl ${isRTL ? 'text-right mr-auto ml-0' : 'text-left'}`}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Headline */}
-            <h1 className={`font-black leading-tight mb-6 drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)] ${isRTL ? 'font-arabic text-5xl sm:text-6xl lg:text-7xl' : 'font-cinematic text-5xl sm:text-6xl lg:text-7xl'}`}
+            <h1 className={`font-black leading-tight mb-6 drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)] ${isRTL ? 'font-arabic text-4xl sm:text-5xl lg:text-6xl' : 'font-cinematic text-4xl sm:text-5xl lg:text-6xl'}`}
               style={{ color: '#ffffff' }}
             >
               <span className="block drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
-                {isRTL ? 'حيث تبدأ الحكايات' : 'Where Stories Begin'}
+                {isRTL ? 'في ممرّ الكتب، لا نطبع الورق…' : "At Book Corridor, We Don't Just Print Pages…"}
               </span>
               <span className="block mt-2 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]" style={{ color: '#f3cf7a' }}>
-                {isRTL ? 'رحلتها إلى القراء' : 'Their Journey to Readers'}
+                {isRTL ? 'بل نفتح الممرّ بين الفكرة والقلب.' : "We Open the Corridor Between Ideas and Hearts."}
               </span>
             </h1>
 

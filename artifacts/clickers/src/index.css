@@ -167,8 +167,8 @@
 
   body {
     background-color: hsl(var(--background));
-    /* Apply library background image with a light gradient overlay so the photo is clear */
-    background-image: linear-gradient(to bottom, rgba(15, 8, 5, 0.2), rgba(15, 8, 5, 0.5)), url('/library-bg.jpg');
+    /* Pure and crystal clear background image without dark tint */
+    background-image: url('/library-bg.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

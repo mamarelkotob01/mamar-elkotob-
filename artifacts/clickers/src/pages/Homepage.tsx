@@ -12,30 +12,21 @@ function HeroSection() {
 
   return (
     <section className="relative min-h-screen overflow-hidden" data-testid="hero-section">
-      {/* Full bleed background image with dark vignette on the left only */}
+      {/* Full bleed background image without dark layer */}
       <div className="absolute inset-0 z-0">
         <img
           src="/library-bg.jpg"
           alt="library background"
           className="w-full h-full object-cover object-center"
         />
-        {/* Vignette: heavy dark on left (where text lives), transparent on right (image) */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: isRTL
-              ? 'linear-gradient(to left, rgba(10,5,2,0.10) 0%, rgba(10,5,2,0.55) 45%, rgba(10,5,2,0.93) 75%, rgba(10,5,2,0.97) 100%)'
-              : 'linear-gradient(to right, rgba(10,5,2,0.10) 0%, rgba(10,5,2,0.55) 45%, rgba(10,5,2,0.93) 75%, rgba(10,5,2,0.97) 100%)',
-          }}
-        />
-        {/* Bottom fade so the books section blends smoothly */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0502] to-transparent" />
+        {/* Subtle bottom fade only to blend into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#0a0502]/80 to-transparent" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col justify-center">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full pt-28 pb-20">
-          {/* Text block – sits on the dark side */}
+          {/* Text block */}
           <motion.div
             className={`max-w-xl ${isRTL ? 'text-right mr-auto ml-0' : 'text-left'}`}
             initial={{ opacity: 0, y: 40 }}
@@ -43,21 +34,21 @@ function HeroSection() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Headline */}
-            <h1 className={`font-black leading-tight mb-6 ${isRTL ? 'font-arabic text-5xl sm:text-6xl lg:text-7xl' : 'font-cinematic text-5xl sm:text-6xl lg:text-7xl'}`}
-              style={{ color: '#f0e0c0' }}
+            <h1 className={`font-black leading-tight mb-6 drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)] ${isRTL ? 'font-arabic text-5xl sm:text-6xl lg:text-7xl' : 'font-cinematic text-5xl sm:text-6xl lg:text-7xl'}`}
+              style={{ color: '#ffffff' }}
             >
-              <span className="block">
+              <span className="block drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
                 {isRTL ? 'حيث تبدأ الحكايات' : 'Where Stories Begin'}
               </span>
-              <span className="block mt-2" style={{ color: '#c8a84b' }}>
+              <span className="block mt-2 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]" style={{ color: '#f3cf7a' }}>
                 {isRTL ? 'رحلتها إلى القراء' : 'Their Journey to Readers'}
               </span>
             </h1>
 
             {/* Subtitle */}
             <p
-              className={`text-lg leading-relaxed mb-10 ${isRTL ? 'font-arabic' : ''}`}
-              style={{ color: 'rgba(240,224,192,0.7)' }}
+              className={`text-lg leading-relaxed mb-10 font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] ${isRTL ? 'font-arabic' : ''}`}
+              style={{ color: 'rgba(255,255,255,0.95)' }}
             >
               {isRTL
                 ? 'ممر الكتب دار نشر تهدف إلى نشر الإبداع والمعرفة، وإيصال الكتب إلى كل قارئ في كل مكان.'

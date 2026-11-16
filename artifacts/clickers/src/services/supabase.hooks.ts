@@ -730,16 +730,17 @@ export function useShippingSettings() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('authors')
-        .select('bio_ar')
+        .select('*')
         .eq('id', SYSTEM_SETTINGS_ID)
         .maybeSingle();
 
-      if (error || !data?.bio_ar) {
+      const record = data as Author | null;
+      if (error || !record?.bio_ar) {
         return DEFAULT_SHIPPING_SETTINGS;
       }
 
       try {
-        const parsed = JSON.parse(data.bio_ar);
+        const parsed = JSON.parse(record.bio_ar);
         return {
           ...DEFAULT_SHIPPING_SETTINGS,
           ...parsed,

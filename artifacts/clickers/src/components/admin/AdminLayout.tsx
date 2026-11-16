@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, BookOpen, Users, Globe, PenTool,
   ShoppingBag, BarChart3, Download, LogOut, ChevronRight,
-  Play, Bell, Menu, X, ExternalLink,
+  Play, Bell, Menu, X, ExternalLink, Truck,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/useAuth';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -37,6 +37,7 @@ function AdminSidebar({
     { href: '/admin/worlds',    label: isRTL ? 'العوالم والقصص' : 'Worlds',          icon: Globe },
     { href: '/admin/blog',      label: isRTL ? 'المدونة والمقالات' : 'Blog',            icon: PenTool },
     { href: '/admin/orders',    label: isRTL ? 'إدارة الطلبات' : 'Orders',          icon: ShoppingBag },
+    { href: '/admin/shipping',  label: isRTL ? 'إعدادات الشحن' : 'Shipping Info',   icon: Truck },
     { href: '/admin/analytics', label: isRTL ? 'التحليلات والمبيعات' : 'Analytics',       icon: BarChart3 },
     { href: '/admin/media',     label: isRTL ? 'مكتبة الوسائط' : 'Media Hub',       icon: Play },
     { href: '/admin/exports',   label: isRTL ? 'تصدير التقارير' : 'Export Reports',  icon: Download },

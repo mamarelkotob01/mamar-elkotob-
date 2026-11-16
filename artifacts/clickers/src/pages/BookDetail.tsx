@@ -4,12 +4,12 @@ import { useState, useEffect, useMemo } from 'react';
 import { 
   Star, ShoppingCart, BookOpen, Play, Music, 
   ArrowLeft, ArrowRight, Tag, ShieldCheck, MessageCircle,
-  BarChart3, X, Volume2, VolumeX
+  BarChart3, X, Volume2, VolumeX, Truck, Clock, CheckCircle2,
 } from 'lucide-react';
 import { BookCard } from '@/components/BookCard';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { useCart } from '@/contexts/CartContext';
-import { useBook, useBooks, useBookRating, useRateBook, useBookReviews } from '@/services/supabase.hooks';
+import { useBook, useBooks, useBookRating, useRateBook, useBookReviews, useShippingSettings } from '@/services/supabase.hooks';
 import { useAuth } from '@/contexts/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { sanitizeHTML } from '@/lib/sanitize';
@@ -37,6 +37,7 @@ export function BookDetail() {
   const { data: recommendedData } = useBooks({ genre: book?.genre });
   const { data: rating } = useBookRating(bookId);
   const { data: reviews, isLoading: reviewsLoading } = useBookReviews(bookId);
+  const { data: shippingSettings } = useShippingSettings();
   const rateBook = useRateBook();
 
   const [hoverRating, setHoverRating] = useState(0);
@@ -382,6 +383,67 @@ export function BookDetail() {
               </div>
 
 
+
+              {/* Shipping & Delivery Fixed Section */}
+              {shippingSettings && (
+                <div className={`mb-12 p-6 md:p-8 rounded-[2rem] bg-card/80 backdrop-blur-xl border border-primary/20 shadow-xl relative overflow-hidden ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <div className={`flex items-center gap-4 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center text-primary flex-shrink-0 shadow-md shadow-primary/5">
+                      <Truck size={24} />
+                    </div>
+                    <div>
+                      <h3 className={`text-xl font-black text-primary ${isRTL ? 'font-arabic' : 'font-cinematic'}`}>
+                        {shippingSettings.shipping_title_ar || (isRTL ? 'الشحن والتوصيل' : 'Shipping & Delivery')}
+                      </h3>
+                      <p className="text-xs font-bold text-primary/50">
+                        {isRTL ? 'توصيل معتمد وموثوق لجميع أنحاء الجمهورية' : 'Reliable delivery nationwide'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className={`text-base text-primary/80 font-medium leading-relaxed mb-6 ${isRTL ? 'font-arabic' : ''}`}>
+                    {shippingSettings.shipping_content_ar}
+                  </p>
+
+                  <div className={`grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-border/50 ${isRTL ? 'text-right' : 'text-left'}`}>
+                    <div className={`flex items-center gap-3 p-3.5 rounded-2xl bg-primary/5 border border-primary/10 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <Clock size={18} className="text-primary/60 flex-shrink-0" />
+                      <div>
+                        <span className="text-[10px] uppercase font-black tracking-wider text-primary/40 block">
+                          {isRTL ? 'مدة التوصيل' : 'Delivery Time'}
+                        </span>
+                        <span className="text-xs font-black text-primary">
+                          {shippingSettings.estimated_days}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={`flex items-center gap-3 p-3.5 rounded-2xl bg-primary/5 border border-primary/10 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <Truck size={18} className="text-primary/60 flex-shrink-0" />
+                      <div>
+                        <span className="text-[10px] uppercase font-black tracking-wider text-primary/40 block">
+                          {isRTL ? 'تكلفة الشحن' : 'Shipping Fee'}
+                        </span>
+                        <span className="text-xs font-black text-primary">
+                          {shippingSettings.shipping_cost}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={`flex items-center gap-3 p-3.5 rounded-2xl bg-primary/5 border border-primary/10 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <CheckCircle2 size={18} className="text-emerald-500 flex-shrink-0" />
+                      <div>
+                        <span className="text-[10px] uppercase font-black tracking-wider text-primary/40 block">
+                          {isRTL ? 'شحن مجاني' : 'Free Shipping'}
+                        </span>
+                        <span className="text-xs font-black text-primary">
+                          {shippingSettings.free_shipping_threshold}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Master Meta info */}
               <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 ${isRTL ? 'text-right' : ''}`}>

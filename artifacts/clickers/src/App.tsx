@@ -45,6 +45,7 @@ const AdminAnalytics = lazy(() => import("@/pages/admin/AdminAnalytics").then(m 
 const AdminWorlds = lazy(() => import("@/pages/admin/AdminWorlds").then(m => ({ default: m.AdminWorlds })));
 const AdminExports = lazy(() => import("@/pages/admin/AdminExports").then(m => ({ default: m.AdminExports })));
 const AdminMedia = lazy(() => import("@/pages/admin/AdminMedia").then(m => ({ default: m.AdminMedia })));
+const AdminShipping = lazy(() => import("@/pages/admin/AdminShipping").then(m => ({ default: m.AdminShipping })));
 
 
 const queryClient = new QueryClient({
@@ -102,6 +103,7 @@ function AdminRoutes() {
             <Route path="/admin/blog" component={AdminBlog} />
             <Route path="/admin/worlds" component={AdminWorlds} />
             <Route path="/admin/orders" component={AdminOrders} />
+            <Route path="/admin/shipping" component={AdminShipping} />
             <Route path="/admin/analytics" component={AdminAnalytics} />
             <Route path="/admin/exports" component={AdminExports} />
             <Route path="/admin/media" component={AdminMedia} />

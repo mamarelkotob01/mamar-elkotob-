@@ -99,6 +99,7 @@ export function useAuthors() {
       const { data, error } = await supabase
         .from('authors')
         .select('*')
+        .neq('id', '00000000-0000-0000-0000-000000000001')
         .order('name_ar');
       if (error) throw error;
       return data as Author[];
@@ -700,6 +701,77 @@ export function useMedia(type?: Database['public']['Enums']['media_type'] | 'all
       const { data, error } = await query.order('created_at', { ascending: false });
       if (error) throw error;
       return data as Media[];
+    },
+  });
+}
+
+// ── SHIPPING & DELIVERY SETTINGS ──────────────────────────────
+export interface ShippingSettings {
+  shipping_title_ar: string;
+  shipping_content_ar: string;
+  estimated_days: string;
+  shipping_cost: string;
+  free_shipping_threshold: string;
+}
+
+const DEFAULT_SHIPPING_SETTINGS: ShippingSettings = {
+  shipping_title_ar: 'الشحن والتوصيل السريع',
+  shipping_content_ar: 'التوصيل متاح لجميع محافظات جمهورية مصر العربية خلال 2-4 أيام عمل. يتم الشحن والتغليف بعناية فائقة والتسليم حتى باب منزلك.',
+  estimated_days: '2-4 أيام عمل لجميع المحافظات',
+  shipping_cost: 'يتم احتسابه تلقائياً في صفحة إتمام الطلب',
+  free_shipping_threshold: 'شحن مجاني للطلبات الأكثر من 500 ج.م',
+};
+
+const SYSTEM_SETTINGS_ID = '00000000-0000-0000-0000-000000000001';
+
+export function useShippingSettings() {
+  return useQuery<ShippingSettings>({
+    queryKey: ['shipping-settings'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('authors')
+        .select('bio_ar')
+        .eq('id', SYSTEM_SETTINGS_ID)
+        .maybeSingle();
+
+      if (error || !data?.bio_ar) {
+        return DEFAULT_SHIPPING_SETTINGS;
+      }
+
+      try {
+        const parsed = JSON.parse(data.bio_ar);
+        return {
+          ...DEFAULT_SHIPPING_SETTINGS,
+          ...parsed,
+        };
+      } catch {
+        return DEFAULT_SHIPPING_SETTINGS;
+      }
+    },
+    staleTime: 60 * 1000,
+  });
+}
+
+export function useUpdateShippingSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (settings: ShippingSettings) => {
+      const payload = {
+        id: SYSTEM_SETTINGS_ID,
+        name_ar: '__SYSTEM_SETTINGS__',
+        name_en: '__SYSTEM_SETTINGS__',
+        bio_ar: JSON.stringify(settings),
+      };
+
+      const { error } = await supabase
+        .from('authors')
+        .upsert(payload as any);
+
+      if (error) throw error;
+      return settings;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['shipping-settings'] });
     },
   });
 }

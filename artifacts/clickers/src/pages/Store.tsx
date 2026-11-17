@@ -9,7 +9,7 @@ import { useSmartSearch } from '@/hooks/useSmartSearch';
 import { useDiscovery } from '@/hooks/useDiscovery';
 
 type SortOption = 'newest' | 'popular' | 'priceAsc' | 'priceDesc';
-type GenreFilter = 'all' | 'Fantasy' | 'Sci-Fi' | 'Historical' | 'Horror' | 'Romance' | 'Adventure' | 'Literary' | 'Mystery';
+type GenreFilter = 'all' | 'Fantasy' | 'Sci-Fi' | 'Historical' | 'Horror' | 'Romance' | 'Adventure' | 'Literary' | 'Mystery' | 'Novel' | 'Thoughts' | 'ShortStory' | 'Poetry' | 'SelfDevelopment' | 'Literature' | 'Religious' | 'Children' | 'Biography' | 'Science' | 'General';
 type FormatFilter = 'all' | 'digital' | 'physical';
 
 export function Store() {
@@ -24,7 +24,10 @@ export function Store() {
   const { results: searchResults, totalFound } = useSmartSearch(search);
   const { trackSearch } = useDiscovery();
 
-  const genres: GenreFilter[] = ['all', 'Fantasy', 'Sci-Fi', 'Historical', 'Horror', 'Romance', 'Adventure', 'Literary', 'Mystery'];
+  const genres: GenreFilter[] = [
+    'all', 'Fantasy', 'Sci-Fi', 'Historical', 'Horror', 'Romance', 'Adventure', 'Literary', 'Mystery',
+    'Novel', 'Thoughts', 'ShortStory', 'Poetry', 'SelfDevelopment', 'Literature', 'Religious', 'Children', 'Biography', 'Science', 'General',
+  ];
   const genreLabels: Record<GenreFilter, string> = {
     all: language === 'ar' ? 'الكل' : 'All',
     Fantasy: language === 'ar' ? 'الخيال' : 'Fantasy',
@@ -35,6 +38,17 @@ export function Store() {
     Adventure: language === 'ar' ? 'المغامرة' : 'Adventure',
     Literary: language === 'ar' ? 'الأدبي' : 'Literary',
     Mystery: language === 'ar' ? 'الغموض' : 'Mystery',
+    Novel: language === 'ar' ? 'رواية' : 'Novel',
+    Thoughts: language === 'ar' ? 'خواطر' : 'Thoughts',
+    ShortStory: language === 'ar' ? 'قصة قصيرة' : 'Short Story',
+    Poetry: language === 'ar' ? 'شعر' : 'Poetry',
+    SelfDevelopment: language === 'ar' ? 'تطوير ذات' : 'Self-Development',
+    Literature: language === 'ar' ? 'أدب' : 'Literature',
+    Religious: language === 'ar' ? 'ديني' : 'Religious',
+    Children: language === 'ar' ? 'أطفال' : 'Children',
+    Biography: language === 'ar' ? 'سيرة' : 'Biography',
+    Science: language === 'ar' ? 'كتب علمي' : 'Science',
+    General: language === 'ar' ? 'عام' : 'General',
   };
 
   const filteredBooks = useMemo(() => {

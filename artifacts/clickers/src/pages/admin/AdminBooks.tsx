@@ -8,8 +8,16 @@ import { supabase } from '@/lib/supabase';
 import { ImageUpload } from '@/components/ImageUpload';
 import { UploadResult } from '@/services/upload';
 
-const GENRES = ['Fantasy', 'Sci-Fi', 'Historical', 'Horror', 'Romance', 'Adventure', 'Literary', 'Mystery', 'General'];
-const GENRES_AR = ['الخيال', 'الخيال العلمي', 'التاريخي', 'الرعب', 'الرومانسية', 'المغامرة', 'الأدبي', 'الغموض', 'عام'];
+const GENRES = [
+  'Fantasy', 'Sci-Fi', 'Historical', 'Horror', 'Romance', 'Adventure', 'Literary', 'Mystery',
+  'Novel', 'Thoughts', 'ShortStory', 'Poetry', 'SelfDevelopment', 'Literature', 'Religious', 'Children', 'Biography', 'Science',
+  'General',
+];
+const GENRES_AR = [
+  'الخيال', 'الخيال العلمي', 'التاريخي', 'الرعب', 'الرومانسية', 'المغامرة', 'الأدبي', 'الغموض',
+  'رواية', 'خواطر', 'قصة قصيرة', 'شعر', 'تطوير ذات', 'أدب', 'ديني', 'أطفال', 'سيرة', 'كتب علمي',
+  'عام',
+];
 
 function BookFormModal({ book, onClose }: { book?: Record<string, unknown> | null; onClose: () => void }) {
   const { data: authors } = useAuthors();
